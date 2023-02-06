@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 14:24:40 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/03/10 23:47:07 by pingpanu         ###   ########.fr       */
+/*   Updated: 2022/12/13 15:53:04 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 static int	no_of_words(const char *s, char c)
 {
@@ -31,17 +32,37 @@ static int	no_of_words(const char *s, char c)
 	return (count);
 }
 
-static int	wordlen(const char *s, int k, char c)
+static char	*str_start(const char *s, char c, int i)
 {
-	int	len;
+	int	j;
+
+	j = 0;
+	while (s[j] == c && s[j + 1] == c)
+		j++;
+	while (s[j])
+	{
+		if (i == 0 && s[j] != c && j == 0)
+			return ((char *)&s[j]);
+		if ((s[j] == c && s[j + 1] != c))
+			return ((char *)&s[j + 1]);
+		j++;
+	}
+	return ((char *)s);
+}
+
+static	char	*get_str(const char *cur, char c)
+{
+	int		len;
+	char	*ret;
 
 	len = 0;
-	while (*(s + k) && *(s + k) != c)
-	{
-		k++;
+	while (cur[len] && cur[len] != c)
 		len++;
-	}
-	return (len);
+	ret = (char *)malloc(sizeof(char) * (len + 1));
+	if (!ret)
+		return (NULL);
+	cur += ft_strlcpy(ret, cur, (len + 1));
+	return (ret);
 }
 
 char	**ft_error(char **array)
@@ -61,9 +82,9 @@ char	**ft_error(char **array)
 char	**ft_split(char const *s, char c)
 {
 	char	**split;
+	char	*cur;
 	int		words;
 	int		i;
-	int		k;
 
 	if (!s)
 		return (NULL);
@@ -71,15 +92,15 @@ char	**ft_split(char const *s, char c)
 	split = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!split)
 		return (NULL);
-	k = 0;
+	split[words] = 0;
+	cur = (char *)s;
 	i = -1;
-	len = 0;
 	while (++i < words)
 	{
-		ft_strslice_c(s, c, k);
+		cur = str_start(cur, c, i);
+		split[i] = get_str(cur, c);
 		if (!split[i])
 			return (ft_error(split));
 	}
-	split[i] = NULL;
 	return (split);
 }

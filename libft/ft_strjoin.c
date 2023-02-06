@@ -6,7 +6,7 @@
 /*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 22:32:21 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/10/21 18:46:25 by user             ###   ########.fr       */
+/*   Updated: 2022/12/13 15:21:03 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,30 +34,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	j = 0;
 	while (s1[++i])
 		join[i] = s1[i];
-	printf("Join = %s\n", join);
 	while (s2[j])
 		join[i++] = s2[j++];
-	printf("Join = %s\n", join);
 	join[i] = '\0';
-	//free (s1);
+	/*if (s1 != NULL)
+		free (s1);*/
 	return (join);
-}
-
-int		main(int argc, char **argv)
-{
-	char	*joined;
-
-	if (argc == 2)
-	{
-		joined = ft_strjoin(NULL, argv[1]);
-		printf("%s\n", joined);
-	}
-	else if (argc == 3)
-	{
-		joined = ft_strjoin(argv[1], argv[2]);
-		printf("%s\n", joined);
-	}
-	else
-		printf("invalid amount of arguments");
-	return (0);
 }

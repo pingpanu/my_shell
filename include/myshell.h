@@ -14,4 +14,14 @@
 # include <errno.h> //stderror, and perror
 # include <termio.h> //support ioctl
 # include <termios.h> //tc*
+
+typedef struct s_lexed_cmd
+{
+    char    **cmds;
+    int     *seq;
+}   t_lexed_cmd;
+
+char    *g_envpath; //a global variable to store path
+
+t_list  *lexer(char *readline);
 #endif
