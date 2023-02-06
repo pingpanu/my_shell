@@ -1,2 +1,2 @@
 # my_shell
-My attempt to recreate my Ubuntu terminal program.
+My attempt to recreate Shell terminal.
