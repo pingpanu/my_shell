@@ -1,11 +1,12 @@
 /*Note: this is based on BoxofNote lexical analyzer
 https://boxofnotes.com/lexical-analyzer-in-c-program-to-detect-tokens*/
 
+#include "myshell.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
+
 //Return true if its quote
 bool    isQUOTE(char ch)
 {
@@ -25,11 +26,12 @@ char* subString(char* str, int left, int right)
     return (subStr);
 }
 // Parsing the input STRING.
-void parse(char* str)
+t_list *parse(char* str)
 {
     int     left = 0, right = 0;
     int     len = strlen(str);
     char    *substr;
+    t_list *ret;
 
     while (right < len && left <= right)
     {
@@ -42,10 +44,11 @@ void parse(char* str)
         {
             int quote = str[right];
             right++;
-            while (str[right] != quote)
+            while (str[right] != quote && right < len)
                 right++;
             substr = subString(str, left, right);
-            printf("'%s'\n", substr);
+            //printf("'%s'\n", substr);
+            ft_lstadd_back(&ret, ft_lstnew(substr));
             right++;
             left = right;
             free(substr);
@@ -57,22 +60,36 @@ void parse(char* str)
                 right++;
             {
                 substr = subString(str, left, right - 1);
-                printf("'%s'\n", substr);
+                //printf("'%s'\n", substr);
+                ft_lstadd_back(&ret, ft_lstnew(substr));
                 left = right;
                 free(substr);
             }
         }
     }
-    return;
+    return (ret);
 }
 // DRIVER FUNCTION
 int main()
 {
     // maximum length of string is 100 here
     char str[100];
+    t_list *ll;
 
     printf("Enter the String: \n");
     scanf("%[^\n]s", str);
-    parse(str); // calling the parse function
+    ll = parse(str);
+    /*ll = ft_cmdll_new(str);
+    printf("str cmd is %s\n", ll->cmd_str);
+    printf("str token is %d\n", ll->token);*/
+    printf("Size of ll = %d\n", ft_lstsize(ll));
+    /*int i = 0;
+    while (ll->next != NULL)
+    {
+        i++;
+        printf("cmd %d = %s\n", i, ll->content);
+        printf("cmd %d token = %d\n", i, ll->token);
+        ll = ll->next;
+    }*/
     return (0);
 }
