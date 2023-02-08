@@ -1,0 +1,47 @@
+My_shell (actually 42 Minishell)
+
+================================ Main Structure ================================
+1) Input (Easy)
+	It take user input and convert to string called cmd_str, important fuction is readline.
+	This part contain user interface of minishell and clean program & exit.
+2) Lexer (Hard)
+	When user input received (cmd_str != NULL) we seperate it to several string per these rule
+	2.1	At quote, preceeded by space (either " or ') until it reach another quote with the same preceeding value.
+		Here's the example.
+		1/	cmd_str = here 'come the' star
+			lexed = here -> 'come the' -> star
+		2/	cmd_str = I 'am "the" hunter' Sova
+			lexed = I -> 'am "the" hunter' -> Sova
+		3/	cmd_str = To 'eternity' "and beyond
+			lexed = To -> 'eternity' -> "and beyond
+		4/	cmd_str = ls -la "|grep another"
+			lexed = ls -> -la -> "| grep another"
+	2.2	At spacebar until it reach another spacebar
+		Here's the example.
+		1/	cmd_str = A whole new world
+			lexed = A -> whole -> new -> world
+		2/	cmd_str = Wish I c"oul"d be part of t'h'at wor'ld'
+			lexed = Wish -> I -> c"oul"d -> be -> part -> of -> t'h'at -> wor'ld'
+		3/	cmd_str = ls -la | grep another
+			lexed = ls -> -la -> | -> grep -> another
+	Then each seperated strings get a token, these token shall be used for parser
+3) Parser (Hardest)
+	Parser received seperated strings and tokens, then make command table.
+	Parser will find if any input string contained command, and option. Then check the grammar of cmd_str, if it's not valid, the parser won't send to execute.
+	Here's the command table
+		
+		cmd -> option 1 -> option 2 -> args
+4) Expander (Hard)
+	It actually part of Parser, it expaned the string in case some characters are found. Once the expansion finish, it remove quote unless that quote was quoted.
+	Here's are the list of expander
+	1/ Shell parameter expansion
+	2/ Command substitution
+	3/ Arithmetic expansion
+	4/ Quote removal
+5) Executor (Medium)
+	One the cmd_str has been parsed and expanded, it is executed. Pipex knowledge is beneficial for this part espescially bonus.
+
+================================= Limitation ===================================
+
+Only one global variable is allowed, I think it should be struct containing the computer's environments as it's required for several main structure.
+Furthermore, some command is prohibited which mean auxillary function is required.
