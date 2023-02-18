@@ -1,24 +1,34 @@
 #include "myshell.h"
 
+void    sighandler(int signal)
+{
+    if (signal == SIGINT)
+        cmd_str = readline(dis_str);
+    else if (signal == SIGQUIT)
+        return ;
+    else if (signal == EOF)
+        exit(0);
+}
+
 int main(void)
 {
-    char    *cmd_str;
-    char    *dis_str;
-    t_list  *cmd_list;
-
+    char    *cmd_str; //should be global variable.
+    char    *dis_str; //also should be global variable
+    struct sigaction    act;
+    
+    //signal related function
+    ft_memset(&act, 0, sizeof(act));
+    act.sa_handler = &sighandler;
+    act.sa_flags = 0;
+    sigemptyset(&act.sa_mask);
+    sigaction(SIGINT, &act, NULL);
+    //UI to be included here
     g_envpath = getenv("PATH");
     dis_str = ft_strjoin(getenv("USER"), ": ");
-    //printf("%s\n", dis_str);
-    //printf("%s\n", g_envpath);
-    while (1) {
+    while (1) 
+    {
         cmd_str = readline(dis_str);
-        //cmd_list = lexer(cmd_str);
-        /*
-        if (cmd_str != NULL)
-            free(cmd_str);
-        if (arr_cmd != NULL)
-            free_char_arr(arr_cmd);
-            */
+        //some function to receive cmd_str and execute it
     }
     return (0);
 }

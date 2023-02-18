@@ -26,16 +26,14 @@ char* subString(char* str, int left, int right)
     return (subStr);
 }
 // Parsing the input STRING.
-t_list *parse(char* str)
+void    parse(t_list **cmd_ll, char* str)
 {
     int     left = 0, right = 0;
     int     len = strlen(str);
     char    *substr;
-    t_list *ret;
 
     while (right < len && left <= right)
     {
-        //shift left and right if str[right] is space
         if (isspace(str[right])) {
             right++;
             left = right;
@@ -47,8 +45,7 @@ t_list *parse(char* str)
             while (str[right] != quote && right < len)
                 right++;
             substr = subString(str, left, right);
-            //printf("'%s'\n", substr);
-            ft_lstadd_back(&ret, ft_lstnew(substr));
+            ft_lstadd_back(cmd_ll, ft_lstnew(substr));
             right++;
             left = right;
             free(substr);
@@ -60,36 +57,31 @@ t_list *parse(char* str)
                 right++;
             {
                 substr = subString(str, left, right - 1);
-                //printf("'%s'\n", substr);
-                ft_lstadd_back(&ret, ft_lstnew(substr));
+                ft_lstadd_back(cmd_ll, ft_lstnew(substr));
                 left = right;
                 free(substr);
             }
         }
     }
-    return (ret);
 }
 // DRIVER FUNCTION
 int main()
 {
     // maximum length of string is 100 here
     char str[100];
-    t_list *ll;
+    t_list  *ll;
 
+    ll = NULL;
     printf("Enter the String: \n");
     scanf("%[^\n]s", str);
-    ll = parse(str);
-    /*ll = ft_cmdll_new(str);
-    printf("str cmd is %s\n", ll->cmd_str);
-    printf("str token is %d\n", ll->token);*/
+    parse(&ll, str);
     printf("Size of ll = %d\n", ft_lstsize(ll));
-    /*int i = 0;
-    while (ll->next != NULL)
+    int i = 1;
+    while (ll != NULL)
     {
+        printf("token number %d = %s\n", i, ll->token);
         i++;
-        printf("cmd %d = %s\n", i, ll->content);
-        printf("cmd %d token = %d\n", i, ll->token);
         ll = ll->next;
-    }*/
+    }
     return (0);
 }
