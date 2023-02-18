@@ -64,7 +64,7 @@ void    parse(t_list **cmd_ll, char* str)
         }
     }
 }
-// DRIVER FUNCTION
+// DRIVER FUNCTION -> TO BE DELETED 
 int main()
 {
     // maximum length of string is 100 here
