@@ -15,8 +15,6 @@ int main(void)
     char    *cmd_str = NULL;
     t_list  *cmd_ll = NULL;
     //struct sigaction    act;
-    struct  stat buf;
-    int     exist = 0;
 
     //signal related function
     /*ft_memset(&act, 0, sizeof(act));
@@ -36,8 +34,7 @@ int main(void)
             lexer(&cmd_ll, cmd_str);
             parser(my_env, cmd_ll);
         }*/
-        exist = lstat(cmd_str, &buf);
-        printf("%d\n", exist);
+        printf("%s\n", cmd_str);
     }
     return (0);
 }

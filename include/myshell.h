@@ -1,5 +1,6 @@
 #ifndef MYSHELL_H
 # define MYSHELL_H
+# define _XOPEN_SOURCE 700
 # include "libft.h" //already have unistd.h and stdlib.h
 # include <stdio.h> //printf
 # include <readline/readline.h> //readline, rl_*, and add_history
@@ -15,13 +16,24 @@
 # include <termio.h> //support ioctl
 # include <termios.h> //tc*
 
-typedef struct s_lexed_cmd
+/*This is struct to store the computer systems*/
+typedef struct s_system 
 {
-    char    **cmds;
-    int     *seq;
-}   t_lexed_cmd;
+    char    **env_path; //path variable array
+    char    *dis_str; //User displayed at readline function
+}   t_system;
 
-char    *g_envpath; //a global variable to store path
+/*This is struct to get parameter for cmd_ll*/
+typedef struct s_cmd_param
+{
+    int     is_pipe; //check if there is '|'
+    int     is_amp; //check if there is '&'
+    int     is_gg; //check if there is '>>'
+    int     is_ga; //check if there is '>&'
+}   t_cmd_param;
 
-t_list  *lexer(char *readline);
+t_system    my_env; //a global variable
+
+void    lexer(t_list **cmd_ll, char* str);
+void    parser(t_system env, t_list *cmd_ll);
 #endif
