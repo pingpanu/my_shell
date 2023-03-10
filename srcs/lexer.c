@@ -26,7 +26,7 @@ char* subString(char* str, int left, int right)
     return (subStr);
 }
 // Parsing the input STRING.
-void    parse(t_list **cmd_ll, char* str)
+void    lexer(t_list **cmd_ll, char *str)
 {
     int     left = 0, right = 0;
     int     len = strlen(str);
@@ -74,7 +74,7 @@ int main()
     ll = NULL;
     printf("Enter the String: \n");
     scanf("%[^\n]s", str);
-    parse(&ll, str);
+    lexer(&ll, str);
     printf("Size of ll = %d\n", ft_lstsize(ll));
     int i = 1;
     while (ll != NULL)
@@ -83,5 +83,10 @@ int main()
         i++;
         ll = ll->next;
     }
+    /*to be considered how I design the command table*/
+    parser(ll);
+    ft_lstclear(ll);
+    /*if (*cmd_tt != NULL)
+        executor(cmd_tt);*/
     return (0);
 }
