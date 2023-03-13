@@ -42,7 +42,7 @@ int main(int argc, char **argv, char **env)
         path = find_path(argv[1], env_path);
         if (path == NULL)
             return (1);
-        if (execve(path, argv + 1, env) == -1)
+        if (execve(path, argv + 1, NULL) == -1)
             printf("Command %s not found\n", argv[1]);
     }
     else

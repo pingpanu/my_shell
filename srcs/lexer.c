@@ -84,7 +84,7 @@ int main()
         ll = ll->next;
     }
     /*to be considered how I design the command table*/
-    parser(ll);
+    parser(env, ll);
     ft_lstclear(ll);
     /*if (*cmd_tt != NULL)
         executor(cmd_tt);*/
