@@ -1,42 +1,5 @@
 #include "myshell.h"
 
-/*This is solution implemented in pipex*/
-/*I want to use stat, lstat, and fstat instead*/
-int     iscommand(char **path_arr, char *cmd)
-{
-	char	*proto_ret;
-	char	*ret;
-	int		i;
-
-	i = 0;
-	while (path_arr[i])
-	{
-		proto_ret = ft_strjoin(path_arr[i], "/");
-		ret = ft_strjoin(proto_ret, cmd);
-		free(proto_ret);
-		if (access(ret, F_OK) == 0)
-			return (1);
-		free(ret);
-		i++;
-	}
-	return (0);
-}
-
-int     cmd_checker(t_system env, t_list *cmd_ll)
-{
-    t_list  *ptr;
-
-    ptr = cmd_ll;
-    while (ptr != NULL)
-    {
-        if (check_access(env.env_path, ptr->token)) {
-            return (1);
-        }
-        ptr = ptr->next;
-    }
-    return (0);
-}
-
 char    **ll_to_argv(t_list *cmd_ll)
 {
     char    **argv;
@@ -53,23 +16,16 @@ char    **ll_to_argv(t_list *cmd_ll)
     return (argv);
 }
 
-void    parser(t_system env, t_list *cmd_ll)
+char    **parser(t_list *cmd_ll)
 {
-    /*1) Check whether the cmd_ll have any command*/
-    /*2) Check if option exist (have - or -- at the front of str)*/
+    /*1) Check whether the next token is redirection*/
+    /*2) Check whether the previous token is redirection*/
     /*3) Check if any prefix existed to activate expander*/
-    /*4) Make command table*/
-    char    **argv_table; //to store cmd_ll as argv table, so it's compatible with my previous pipex
+    /*4) Make command table by change the specific token to command table*/
+    char    **argv_table; //to store cmd_ll as argv table, so it's compatible with my executor
 
-    /*if (!cmd_cheker(env, cmd_ll))
-    {
-        printf("%s: command not found\n", cmd_ll->token);
-        return (NULL);
-    }
-    */
     argv_table = ll_to_argv(cmd_ll);
-    //this print_arr is for testing
-    int     i = -1;
-    while(argv_table[++i])
-        printf("argv[%d] = %s\n", i, argv_table[i]);
+    if (!argv_table)
+        return (NULL);
+    return (argv_table);
 }

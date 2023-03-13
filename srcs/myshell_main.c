@@ -1,5 +1,18 @@
 #include "myshell.h"
 
+void    free_cmdtable(char **arr)
+{
+    int     i;
+
+    i = 0;
+    while (arr[i])
+    {
+        free(arr[i]);
+        i++;
+    }
+    free(arr);
+}
+
 void    sighandler(int signal)
 {
     if (signal == SIGINT) {
@@ -13,6 +26,7 @@ void    sighandler(int signal)
 int main(void)
 {
     char    *cmd_str = NULL;
+    char    **cmd_table;
     t_list  *cmd_ll = NULL;
     struct sigaction    act;
     struct sigaction    quit;
@@ -36,12 +50,14 @@ int main(void)
         if (cmd_str == NULL)
             break ;
         add_history(cmd_str);
-        /*some function to receive cmd_str and execute it
+        /*some function to receive cmd_str and execute it*/
         lexer(&cmd_ll, cmd_str);
-        parser(my_env, cmd_ll);*/
-        printf("%s\n", cmd_str);
+        cmd_table = parser(cmd_ll);
+        if (cmd_table)
+            executor(cmd_table);
+        //printf("%s\n", cmd_str);
         ft_lstclear(&cmd_ll);
-        //free_cmdtable(&table);
+        free_cmdtable(cmd_table);
     }
     printf("exit\n");
     return (0);

@@ -18,6 +18,9 @@ CYAN = '\033[0;36m'
 
 #sources
 SRC_NAME = 	myshell_main.c \
+			lexer.c \
+			parser.c \
+			executor.c \
 
 OBJS = $(addprefix $(SDIR), $(SRC_NAME:.c=.o))
 
@@ -25,9 +28,9 @@ all : $(NAME)
 
 $(NAME) : $(OBJS)
 	@ echo "$(YELLOW)Make libft.a library$(DEFCO)"
-	@ make -C $(LIB)
+	@ make bonus -C $(LIB)
 	@ echo "$(GREEN)libft.a created$(DEFCO)"
-	@ $(CC) $(FLAGS) $^ -L $(LIB) -lft -L $(RDIR) -lreadline -I $(INC) -I  $(LIB) -o $(NAME)
+	@ $(CC) $(FLAGS) $^ -L $(LIB) -lft -lreadline -I $(INC) -I  $(LIB) -o $(NAME)
 	@ echo "$(GREEN)$(NAME) created$(DEFCO)" 
 
 $(SDIR)%.o : $(SDIR)%.c

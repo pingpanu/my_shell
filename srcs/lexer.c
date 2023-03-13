@@ -84,7 +84,7 @@ void    lexer(t_list **cmd_ll, char *str)
         }
     }
 }
-// DRIVER FUNCTION -> TO BE DELETED 
+/* DRIVER FUNCTION -> TO BE DELETED 
 int main()
 {
     // maximum length of string is 100 here
@@ -103,10 +103,10 @@ int main()
         i++;
         ll = ll->next;
     }
-    /*to be considered how I design the command table*/
+    to be considered how I design the command table
     //parser(my_env, ll);
     ft_lstclear(&ll);
-    /*if (*cmd_tt != NULL)
-        executor(cmd_tt);*/
+    if (*cmd_tt != NULL)
+        executor(cmd_tt);
     return (0);
-}
+}*/
