@@ -9,8 +9,9 @@ char    **ll_to_argv(t_list *cmd_ll)
     argv = malloc(sizeof(char *) * (ft_lstsize(cmd_ll) + 1));
     while (ll_ptr != NULL)
     {
-        argv[i++] = ft_strdup(cmd_ll->token);
+        argv[i] = ft_strdup(ll_ptr->token);
         ll_ptr = ll_ptr->next;
+        i++;
     }
     argv[i] = NULL;
     return (argv);

@@ -1,5 +1,7 @@
 #include "myshell.h"
 
+t_system    my_env; //a global variable
+
 void    free_cmdtable(char **arr)
 {
     int     i;
@@ -31,6 +33,11 @@ int main(void)
     struct sigaction    act;
     struct sigaction    quit;
 
+    //UI to be included here
+    my_env.env_path = ft_split(getenv("PATH"), ':');
+    //printf("%s\n", my_env.env_path);
+    my_env.dis_str = ft_strjoin(getenv("USER"), ": ");
+
     //signal related function, using signal if fine
     act.sa_handler = sighandler;
     act.sa_flags = 0;
@@ -40,10 +47,6 @@ int main(void)
     quit.sa_flags = 0;
     sigemptyset(&quit.sa_mask);
     sigaction (SIGQUIT, &quit, NULL);
-    //UI to be included here
-    my_env.env_path = ft_split(getenv("PATH"), ':');
-    //printf("%s\n", my_env.env_path);
-    my_env.dis_str = ft_strjoin(getenv("USER"), ": ");
     while (1) 
     {
         cmd_str = readline(my_env.dis_str);
@@ -54,7 +57,7 @@ int main(void)
         lexer(&cmd_ll, cmd_str);
         cmd_table = parser(cmd_ll);
         if (cmd_table)
-            executor(cmd_table);
+            executor(my_env, cmd_table);
         //printf("%s\n", cmd_str);
         ft_lstclear(&cmd_ll);
         free_cmdtable(cmd_table);

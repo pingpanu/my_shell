@@ -32,8 +32,7 @@ typedef struct s_cmd_param
     int     is_ga; //check if there is '>&'
 }   t_cmd_param;
 
-t_system    my_env; //a global variable
-
 void    lexer(t_list **cmd_ll, char* str);
-void    parser(t_system env, t_list *cmd_ll);
+char    **parser(t_list *cmd_ll);
+int     executor(t_system my_env, char **cmd);
 #endif

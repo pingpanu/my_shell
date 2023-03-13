@@ -26,7 +26,7 @@ char    *find_path(char *cmd, char **env_path)
 }
 
 /*it supposed to take struct called cmd_table*/
-int     executor(char **cmd)
+int     executor(t_system my_env, char **cmd)
 {
     char    *path;
     pid_t   pid;
