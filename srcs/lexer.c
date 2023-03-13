@@ -6,6 +6,26 @@ https://boxofnotes.com/lexical-analyzer-in-c-program-to-detect-tokens*/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+//make token and send to linked list
+static char    *newtoken(char *str)
+{
+    if (ft_strncmp(str, ">", 2) == 0)
+        return (ft_strdup("GREAT"));
+    else if (ft_strncmp(str, "<", 2) == 0)
+        return (ft_strdup("LESS"));
+    else if (ft_strncmp(str, ">>", 3) == 0)
+        return (ft_strdup("GREATGREAT"));
+    else if (ft_strncmp(str, ">&", 3) == 0)
+        return (ft_strdup("GREATAMP"));
+    else if (ft_strncmp(str, "<<", 3) == 0)
+        return (ft_strdup("LESSLESS"));
+    else if (ft_strncmp(str, "|", 2) == 0)
+        return (ft_strdup("PIPE"));
+    else if (ft_strncmp(str, "&", 2) == 0)
+        return (ft_strdup("AMPERSAND"));
+    else
+        return (ft_strdup(str));
+}
 
 //Return true if its quote
 bool    isQUOTE(char ch)
@@ -45,7 +65,7 @@ void    lexer(t_list **cmd_ll, char *str)
             while (str[right] != quote && right < len)
                 right++;
             substr = subString(str, left, right);
-            ft_lstadd_back(cmd_ll, ft_lstnew(substr));
+            ft_lstadd_back(cmd_ll, ft_lstnew(newtoken(substr)));
             right++;
             left = right;
             free(substr);
@@ -57,7 +77,7 @@ void    lexer(t_list **cmd_ll, char *str)
                 right++;
             {
                 substr = subString(str, left, right - 1);
-                ft_lstadd_back(cmd_ll, ft_lstnew(substr));
+                ft_lstadd_back(cmd_ll, ft_lstnew(newtoken(substr)));
                 left = right;
                 free(substr);
             }
@@ -84,8 +104,8 @@ int main()
         ll = ll->next;
     }
     /*to be considered how I design the command table*/
-    parser(env, ll);
-    ft_lstclear(ll);
+    //parser(my_env, ll);
+    ft_lstclear(&ll);
     /*if (*cmd_tt != NULL)
         executor(cmd_tt);*/
     return (0);
