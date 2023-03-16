@@ -84,18 +84,42 @@ void    lexer(t_list **cmd_ll, char *str)
         }
     }
 }
-/* DRIVER FUNCTION -> TO BE DELETED 
+/*check function
+void    print_arr(char **str)
+{
+    int     i = -1;
+
+    while(str[++i])
+        printf("%d = %s\n", i, str[i]);
+}
+
+void    check_table(t_cmd_table *table)
+{
+    t_cmd_node  *ptr;
+
+    ptr = table->cmds;
+    while(ptr)
+    {
+        print_arr(ptr->cmd_arr);
+        ptr = ptr->next;
+    }
+    printf("infile = %s\n", table->infile);
+    printf("outfile = %s\n", table->outfile);
+}
+
+DRIVER FUNCTION -> TO BE DELETED
 int main()
 {
     // maximum length of string is 100 here
     char str[100];
     t_list  *ll;
+    t_cmd_table *cmd_table;
 
     ll = NULL;
     printf("Enter the String: \n");
     scanf("%[^\n]s", str);
     lexer(&ll, str);
-    printf("Size of ll = %d\n", ft_lstsize(ll));
+    /*printf("Size of ll = %d\n", ft_lstsize(ll));
     int i = 1;
     while (ll != NULL)
     {
@@ -103,10 +127,7 @@ int main()
         i++;
         ll = ll->next;
     }
-    to be considered how I design the command table
-    //parser(my_env, ll);
-    ft_lstclear(&ll);
-    if (*cmd_tt != NULL)
-        executor(cmd_tt);
+    cmd_table = parser(ll);
+    check_table(cmd_table);
     return (0);
 }*/

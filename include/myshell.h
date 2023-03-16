@@ -44,6 +44,6 @@ typedef struct s_cmd_table
 }   t_cmd_table;
 
 void        lexer(t_list **cmd_ll, char* str);
-t_cmd_table parser(t_list *cmd_ll);
+t_cmd_table *parser(t_list *cmd_ll);
 int         executor(t_system my_env, char **cmd);
 #endif

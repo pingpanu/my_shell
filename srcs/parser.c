@@ -17,19 +17,6 @@ char    **ll_to_strarr(t_list *cmd_ll)
     return (argv);
 }
 
-void    print_ll(t_list *temp)
-{
-    t_list  *ptr;
-
-    ptr = temp;
-    while (ptr)
-    {
-        printf("%s -> ", ptr->token);
-        ptr = ptr->next;
-    }
-    printf("\n");
-}
-
 t_list  *sub_linklist(t_list *left, t_list *right)
 {
     t_list  *ret;
@@ -55,61 +42,61 @@ t_cmd_node  *newnode(t_list *temp)
     return (new);
 }
 
-t_cmd_node  *lastnode(t_cmd_node *nodes)
-{
-    if (nodes == NULL)
-        return (NULL);
-    while (nodes->next != NULL)
-        nodes = nodes->next;
-    return (nodes);
-}
-
-void    node_addback(t_cmd_node *node, t_cmd_node *new)
+void    node_addback(t_cmd_node **node, t_cmd_node *new)
 {
     t_cmd_node  *tmp_nd;
-
+    
     if (!new)
         return ;
-    if (node == NULL)
-        node = new;
+    if (*node == NULL)
+        *node = new;
     else
     {
-        tmp_nd = lastnode(node);
+        tmp_nd = *node;
+        while(tmp_nd->next != NULL)
+            tmp_nd = tmp_nd->next;
         tmp_nd->next = new;
     }
 }
 
-t_cmd_table parser(t_list *cmd_ll)
+int     isword(char *token)
 {
-    /*1) Check whether the next token is redirection*/
-    /*2) Check whether the previous token is redirection*/
-    /*3) Check if any prefix existed to activate expander*/
-    /*4) Make command table by change the specific token to command table*/
-    t_cmd_table     cmd_table; //to store cmd_ll as argv table, so it's compatible with my executor
+    if (ft_strncmp(token, "GREAT", 6) == 0 || ft_strncmp(token, "LESS", 5) == 0 ||
+        ft_strncmp(token, "GREATGREAT", 11) == 0 || ft_strncmp(token, "GREATAMP", 9) == 0 ||
+        ft_strncmp(token, "LESSLESS", 9) == 0 || ft_strncmp(token, "PIPE", 5) == 0 ||
+        ft_strncmp(token, "AMP", 4) == 0)
+        return (1);
+    return (0);
+}
+
+t_cmd_table    *parser(t_list *cmd_ll)
+{
+    t_cmd_table     *cmd_table;
     t_list          *left_ptr;
     t_list          *right_ptr;
     t_list          *temp;
 
-    //cmd_table = malloc(sizeof(t_cmd_table));
-    cmd_table.cmds = NULL;
-    cmd_table.infile = NULL;
-    cmd_table.outfile = NULL;
+    cmd_table = malloc(sizeof(t_cmd_table));
+    if (!cmd_table)
+        return (NULL);
+    cmd_table->cmds = NULL;
+    cmd_table->infile = NULL;
+    cmd_table->outfile = NULL;
     left_ptr = cmd_ll;
     right_ptr = cmd_ll;
     while (right_ptr)
     {
-        /*parse cmd when pipe*/
-        if (isword(left_ptr) != 0)
+        if (isword(left_ptr->token) == 1)
             left_ptr = left_ptr->next;
         if (ft_strncmp(right_ptr->token, "PIPE", 5) == 0)
         {
             temp = sub_linklist(left_ptr, right_ptr);
-            print_ll(temp);
-            node_addback(cmd_table.cmds, newnode(temp));
+            node_addback(&cmd_table->cmds, newnode(temp));
             ft_lstclear(&temp);
             left_ptr = right_ptr;
         }
         right_ptr = right_ptr->next;
     }
+    node_addback(&cmd_table->cmds, newnode(left_ptr));
     return (cmd_table);
 }
