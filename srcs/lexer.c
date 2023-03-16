@@ -15,14 +15,10 @@ static char    *newtoken(char *str)
         return (ft_strdup("LESS"));
     else if (ft_strncmp(str, ">>", 3) == 0)
         return (ft_strdup("GREATGREAT"));
-    else if (ft_strncmp(str, ">&", 3) == 0)
-        return (ft_strdup("GREATAMP"));
     else if (ft_strncmp(str, "<<", 3) == 0)
         return (ft_strdup("LESSLESS"));
     else if (ft_strncmp(str, "|", 2) == 0)
         return (ft_strdup("PIPE"));
-    else if (ft_strncmp(str, "&", 2) == 0)
-        return (ft_strdup("AMPERSAND"));
     else
         return (ft_strdup(str));
 }

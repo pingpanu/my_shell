@@ -62,9 +62,15 @@ void    node_addback(t_cmd_node **node, t_cmd_node *new)
 int     isword(char *token)
 {
     if (ft_strncmp(token, "GREAT", 6) == 0 || ft_strncmp(token, "LESS", 5) == 0 ||
-        ft_strncmp(token, "GREATGREAT", 11) == 0 || ft_strncmp(token, "GREATAMP", 9) == 0 ||
-        ft_strncmp(token, "LESSLESS", 9) == 0 || ft_strncmp(token, "PIPE", 5) == 0 ||
-        ft_strncmp(token, "AMP", 4) == 0)
+        ft_strncmp(token, "GREATGREAT", 11) == 0 || ft_strncmp(token, "LESSLESS", 9) == 0 ||
+        ft_strncmp(token, "PIPE", 5) == 0)
+        return (1);
+    return (0);
+}
+
+int     isright(char *token)
+{
+    if (ft_strncmp(token, "GREAT", 6) == 0 || ft_strncmp(token, "GREATGREAT", 11) == 0)
         return (1);
     return (0);
 }
@@ -88,12 +94,16 @@ t_cmd_table    *parser(t_list *cmd_ll)
     {
         if (isword(left_ptr->token) == 1)
             left_ptr = left_ptr->next;
-        if (ft_strncmp(right_ptr->token, "PIPE", 5) == 0)
+        if (isword(right_ptr->token) == 1)
         {
             temp = sub_linklist(left_ptr, right_ptr);
             node_addback(&cmd_table->cmds, newnode(temp));
             ft_lstclear(&temp);
             left_ptr = right_ptr;
+            if (ft_strncmp(right_ptr->token, "LESS", 5) == 0)
+                cmd_table->infile = ft_strdup(right_ptr->next->token);
+            else if (isright(right_ptr->token) == 1)
+                cmd_table->outfile = ft_strdup(right_ptr->next->token);
         }
         right_ptr = right_ptr->next;
     }
