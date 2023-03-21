@@ -1,7 +1,6 @@
 #ifndef MYSHELL_H
 # define MYSHELL_H
 # define _XOPEN_SOURCE 700
-# define INFILE ".temp_infile"
 # include "libft.h" //already have unistd.h and stdlib.h
 # include <readline/readline.h> //readline, rl_*, and add_history
 # include <readline/history.h> //readline, rl_*, and add_history
@@ -20,6 +19,9 @@
 #  include <termio.h>
 # endif
 # include <termios.h> //tc*
+# define INPUT 0
+# define OPERATE 1
+# define OUTPUT 2
 
 
 /*This is struct to store the computer systems*/
@@ -27,6 +29,8 @@ typedef struct s_system
 {
     char    **env_path; //path variable array
     char    *dis_str; //User displayed at readline function
+    struct  sigaction   act;
+    struct  sigaction   quit;
 }   t_system;
 
 /*This is command node to store all cmds*/
@@ -46,7 +50,17 @@ typedef struct s_cmd_table
     char        *hdoc_delim;  
 }   t_cmd_table;
 
+typedef struct s_executor
+{
+    int     node_ptr;
+    pid_t   pid;
+    int     nodesize;
+    int     pipe_no;
+    int     *pipe;
+}   t_executor;
+
+
 void        lexer(t_list **cmd_ll, char* str);
 t_cmd_table *parser(t_list *cmd_ll);
-int         executor(t_system my_env, char **cmd);
+int         executor(t_system my_env, t_cmd_table *cmd_table);
 #endif

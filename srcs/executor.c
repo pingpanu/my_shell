@@ -1,51 +1,72 @@
 #include "myshell.h"
 
-/*to be moved to executor_utils*/
-char    *find_path(char *cmd, char **env_path)
+void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
 {
-    char    *proto_ret;
-    char    *ret;
-    int     i = -1;
+    int     pipe_ptr = -1;
 
-    /*check if argv[1] is cmd installed in the computer*/
-    while (env_path[++i])
+    exe->node_ptr = -1;
+    exe->nodesize = nodesize(cmd_table->cmds);
+    exe->pipe_no = 2 * (exe->nodesize - 1);
+    if (exe->pipe_no > 0)
     {
-        proto_ret = ft_strjoin(env_path[i], "/");
-        ret = ft_strjoin(proto_ret, cmd);
-        free(proto_ret);
-        if (access(ret, F_OK) == 0)
-            return (ret);
-        free(ret);
+        exe->pipe = (int*)malloc(sizeof(int) * exe->pipe_no);
+        while (++pipe_ptr < exe->nodesize - 1)
+        {
+            if (pipe(exe->pipe + 2 * pipe_ptr) < 0)
+                pipe_free(exe);
+        }
     }
-    /*when argv[1] is not cmd installed in the computer*/
-    /*check if we can access the file*/
-    if (access(cmd, F_OK) == 0)
-        return (cmd);
-    printf("%s: No such file or directory\n", cmd);
-    return (NULL);
 }
 
-/*it supposed to take struct called cmd_table*/
-int     executor(t_system my_env, char **cmd)
+int     pipe_executor(t_system env, t_cmd_table *cmdt, t_executor *exe)
+{
+    char        *path;
+    t_cmd_node  *cmd_ptr;
+
+    cmd_ptr = cmdt->cmds;
+    while (cmd_ptr->next)
+    {
+        new_pipex(env, cmd_ptr->cmd_arr, cmd_ptr->next->cmd_arr, exe);
+        cmd_ptr = cmd_ptr->next;
+    }
+    return (1);
+}
+
+int     single_executor(t_system env, t_cmd_table *cmdt, t_executor *exe)
 {
     char    *path;
-    pid_t   pid;
 
-    pid = fork();
-    if (pid == -1)
-        return (1);
-    else if (pid == 0)
+    dup_fd(cmdt);
+    exe->pid = fork();
+    if (exe->pid < 0)
+        return (0);
+    else if (exe->pid == 0)
     {
-        path = find_path(cmd[0], my_env.env_path);
-        if (path == NULL)
-        {
-            printf("%s: command not found\n", cmd[0]);
-            return (1);
-        }
-        if (execve(path, cmd, NULL) == -1)
-            return (1);
+        path = find_path(cmdt->cmds->cmd_arr[0], env.env_path);
+        if (execve(path, cmdt->cmds->cmd_arr, NULL) == -1)
+            buildins(env, cmdt, exe);
     }
     else
         wait(NULL);
-    return (0);
+    return (1);
+}
+
+int     executor(t_system my_env, t_cmd_table *cmd_table)
+{
+    t_executor  exe;
+
+    init_exe(&exe, cmd_table);
+    signal_operator(&my_env, INPUT);
+    if (exe.pipe_no > 0)
+    {
+        if (pipe_executor(my_env, cmd_table, &exe) < 1)
+            return (0);
+    }
+    else
+    {
+        if (single_executor(my_env, cmd_table, &exe) < 1);
+            return (0);
+    }
+    signal_operator(&my_env, OUTPUT);
+    return (1);
 }
