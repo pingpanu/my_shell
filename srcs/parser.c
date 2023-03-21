@@ -59,27 +59,24 @@ void    node_addback(t_cmd_node **node, t_cmd_node *new)
     }
 }
 
-int     isword(char *token)
+int     isredirection(t_list *ptr)
 {
-    if (ft_strncmp(token, "GREAT", 6) == 0 || ft_strncmp(token, "LESS", 5) == 0 ||
-        ft_strncmp(token, "GREATGREAT", 11) == 0 || ft_strncmp(token, "HDOC", 5) == 0 ||
-        ft_strncmp(token, "PIPE", 5) == 0)
+    if (!ft_strncmp(ptr->token, "GREAT", 6) || !ft_strncmp(ptr->token, "LESS", 5) ||
+        !ft_strncmp(ptr->token, "GREATGREAT", 11) || !ft_strncmp(ptr->token, "HDOC", 5))
         return (1);
     return (0);
 }
 
-int     isleft(char *token)
+void    redirection_parse(t_list *ptr, t_cmd_table *cmd_table)
 {
-    if (ft_strncmp(token, "LESS", 5) == 0 || ft_strncmp(token, "HDOC", 5) == 0)
-        return (1);
-    return (0);
-}
-
-int     isright(char *token)
-{
-    if (ft_strncmp(token, "GREAT", 6) == 0 || ft_strncmp(token, "GREATGREAT", 11) == 0)
-        return (1);
-    return (0);
+    if (ft_strncmp(ptr->token, "LESS", 5) == 0)
+        cmd_table->infile = ft_strdup(ptr->next->token);
+    if (ft_strncmp(ptr->token, "GREAT", 6) == 0)
+        cmd_table->outfile = ft_strdup(ptr->next->token);
+    if (ft_strncmp(ptr->token, "GREATGREAT", 11) == 0)
+        cmd_table->outapp = ft_strdup(ptr->next->token);
+    if (ft_strncmp(ptr->token, "HDOC", 5) == 0)
+        cmd_table->hdoc_delim = ft_strdup(ptr->next->token);
 }
 
 t_cmd_table    *parser(t_list *cmd_ll)
@@ -95,21 +92,19 @@ t_cmd_table    *parser(t_list *cmd_ll)
     cmd_table->cmds = NULL;
     cmd_table->infile = NULL;
     cmd_table->outfile = NULL;
+    cmd_table->outapp = NULL;
     left_ptr = cmd_ll;
     right_ptr = cmd_ll;
     while (right_ptr)
     {
-        if (isword(right_ptr->token))
+        if (isredirection(right_ptr) || !ft_strncmp(right_ptr->token, "PIPE", 5))
         {
+            redirection_parse(right_ptr, cmd_table);
             temp = sub_linklist(left_ptr, right_ptr);
             node_addback(&cmd_table->cmds, newnode(temp));
             ft_lstclear(&temp);
-            if (isleft(right_ptr->token))
-                ft_lstadd_back(&cmd_table->infile, ft_lstnew(right_ptr->next->token));
-            if (isright(right_ptr->token))
-                ft_lstadd_back(&cmd_table->outfile, ft_lstnew(right_ptr->next->token));
             left_ptr = right_ptr->next;
-            if (isleft(right_ptr->token) || isright(right_ptr->token))
+            if (isredirection(right_ptr))
                 left_ptr = left_ptr->next;
         }
         if (right_ptr->next == NULL)

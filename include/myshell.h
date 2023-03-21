@@ -1,6 +1,7 @@
 #ifndef MYSHELL_H
 # define MYSHELL_H
 # define _XOPEN_SOURCE 700
+# define INFILE ".temp_infile"
 # include "libft.h" //already have unistd.h and stdlib.h
 # include <readline/readline.h> //readline, rl_*, and add_history
 # include <readline/history.h> //readline, rl_*, and add_history
@@ -40,7 +41,9 @@ typedef struct s_cmd_table
 {
     t_cmd_node  *cmds;
     char        *infile;
-    char        *outfile;        
+    char        *outfile;
+    char        *outapp;
+    char        *hdoc_delim;  
 }   t_cmd_table;
 
 void        lexer(t_list **cmd_ll, char* str);

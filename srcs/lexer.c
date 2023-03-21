@@ -16,7 +16,7 @@ static char    *newtoken(char *str)
     else if (ft_strncmp(str, ">>", 3) == 0)
         return (ft_strdup("GREATGREAT"));
     else if (ft_strncmp(str, "<<", 3) == 0)
-        return (ft_strdup("LESSLESS"));
+        return (ft_strdup("HDOC"));
     else if (ft_strncmp(str, "|", 2) == 0)
         return (ft_strdup("PIPE"));
     else
@@ -99,11 +99,12 @@ void    check_table(t_cmd_table *table)
         print_arr(ptr->cmd_arr);
         ptr = ptr->next;
     }
-    printf("infile = %s\n", table->infile);
-    printf("outfile = %s\n", table->outfile);
+    printf("cmd_table infile = %s\n", table->infile);
+    printf("cmd_table outfile = %s\n", table->outfile);
+    printf("cmd_table outapp = %s\n", table->outapp);
+    printf("hdoc delimiter = %s\n", table->hdoc_delim);
 }
 
-DRIVER FUNCTION -> TO BE DELETED
 int main()
 {
     // maximum length of string is 100 here
@@ -115,14 +116,6 @@ int main()
     printf("Enter the String: \n");
     scanf("%[^\n]s", str);
     lexer(&ll, str);
-    /*printf("Size of ll = %d\n", ft_lstsize(ll));
-    int i = 1;
-    while (ll != NULL)
-    {
-        printf("token number %d = %s\n", i, ll->token);
-        i++;
-        ll = ll->next;
-    }
     cmd_table = parser(ll);
     check_table(cmd_table);
     return (0);
