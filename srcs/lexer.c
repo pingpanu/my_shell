@@ -80,7 +80,7 @@ void    lexer(t_list **cmd_ll, char *str)
         }
     }
 }
-/*check function
+/*check function*/
 void    print_arr(char **str)
 {
     int     i = -1;
@@ -92,6 +92,7 @@ void    print_arr(char **str)
 void    check_table(t_cmd_table *table)
 {
     t_cmd_node  *ptr;
+    char    *ret1;
 
     ptr = table->cmds;
     while(ptr)
@@ -99,9 +100,9 @@ void    check_table(t_cmd_table *table)
         print_arr(ptr->cmd_arr);
         ptr = ptr->next;
     }
+    ret1 = ft_strtrim(table->outfile, "> :");
     printf("cmd_table infile = %s\n", table->infile);
     printf("cmd_table outfile = %s\n", table->outfile);
-    printf("cmd_table outapp = %s\n", table->outapp);
     printf("hdoc delimiter = %s\n", table->hdoc_delim);
 }
 
@@ -119,4 +120,4 @@ int main()
     cmd_table = parser(ll);
     check_table(cmd_table);
     return (0);
-}*/
+}

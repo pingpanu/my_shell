@@ -2,6 +2,8 @@
 NAME = myshell
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
+LINKING = -lreadline -L${HOME}/.brew/opt/readline/lib
+COMFILE = -I${HOME}/.brew/opt/readline/include
 SDIR = srcs/
 LIB = libft
 INC = include
@@ -30,7 +32,7 @@ $(NAME) : $(OBJS)
 	@ echo "$(YELLOW)Make libft.a library$(DEFCO)"
 	@ make bonus -C $(LIB)
 	@ echo "$(GREEN)libft.a created$(DEFCO)"
-	@ $(CC) $(FLAGS) $^ -L $(LIB) -lft -lreadline -I $(INC) -I  $(LIB) -o $(NAME)
+	@ $(CC) $(FLAGS) $^ -L $(LIB) -lft -I $(INC) -I $(LIB) -lreadline -o $(NAME)
 	@ echo "$(GREEN)$(NAME) created$(DEFCO)" 
 
 $(SDIR)%.o : $(SDIR)%.c

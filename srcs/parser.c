@@ -72,9 +72,9 @@ void    redirection_parse(t_list *ptr, t_cmd_table *cmd_table)
     if (ft_strncmp(ptr->token, "LESS", 5) == 0)
         cmd_table->infile = ft_strdup(ptr->next->token);
     if (ft_strncmp(ptr->token, "GREAT", 6) == 0)
-        cmd_table->outfile = ft_strdup(ptr->next->token);
+        cmd_table->outfile = ft_strjoin("> :", ptr->next->token);
     if (ft_strncmp(ptr->token, "GREATGREAT", 11) == 0)
-        cmd_table->outapp = ft_strdup(ptr->next->token);
+        cmd_table->outfile = ft_strjoin(">> :", ptr->next->token);
     if (ft_strncmp(ptr->token, "HDOC", 5) == 0)
         cmd_table->hdoc_delim = ft_strdup(ptr->next->token);
 }
@@ -92,7 +92,6 @@ t_cmd_table    *parser(t_list *cmd_ll)
     cmd_table->cmds = NULL;
     cmd_table->infile = NULL;
     cmd_table->outfile = NULL;
-    cmd_table->outapp = NULL;
     left_ptr = cmd_ll;
     right_ptr = cmd_ll;
     while (right_ptr)
