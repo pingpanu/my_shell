@@ -39,7 +39,7 @@ $(SDIR)%.o : $(SDIR)%.c
 
 $(NAME) : $(OBJS)
 	@ echo "$(YELLOW)Make libft.a library$(DEFCO)"
-	@ make bonus -C $(LIB)
+	@ make -C $(LIB)
 	@ echo "$(GREEN)libft.a created$(DEFCO)"
 	@ $(CC) $(FLAGS) $(OBJS) $(LINK) -o $(NAME)
 	@ echo "$(GREEN)$(NAME) created$(DEFCO)" 

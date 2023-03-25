@@ -19,7 +19,7 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
     int     pipe_ptr = -1;
 
     exe->in_fd = open(cmd_table->infile, O_RDONLY);
-    if (!ft_strncmp(cmd_table->outfile, ">> :", 5))
+    if (!ft_strncmp(cmd_table->outfile, ">>", 2))
         exe->out_fd = open(ft_strtrim(cmd_table->outfile, "> :"), O_CREAT | O_RDWR | O_APPEND, 0644);
     else
         exe->out_fd = open(ft_strtrim(cmd_table->outfile, "> :"), O_CREAT | O_RDWR | O_TRUNC, 0644);
@@ -40,6 +40,7 @@ int     executor(t_system my_env, t_cmd_table *cmd_table)
 
     init_exe(&exe, cmd_table);
     signal_operator(&my_env, BASH_IN);
+    printf("pipe no = %d\n", exe.pipe_no)
     if (exe.pipe_no > 0)
     {
         if (pipe_executor(my_env, cmd_table, &exe) < 1)

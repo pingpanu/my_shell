@@ -34,7 +34,7 @@ int main(void)
     //UI to be included here
     my_env.env_path = ft_split(getenv("PATH"), ':');
     //printf("%s\n", my_env.env_path);
-    my_env.dis_str = ft_strjoin(getenv("USER"), ": ");
+    my_env.dis_str = ft_strjoin(getenv("USER"), "@Myshell: ");
     //signal related function, using signal if fine
     my_env.act.sa_handler = sighandler;
     my_env.act.sa_flags = 0;
@@ -53,7 +53,7 @@ int main(void)
         /*some function to receive cmd_str and execute it*/
         lexer(&cmd_ll, cmd_str);
         cmd_table = parser(cmd_ll);
-        if (cmd_table)
+        if (cmd_table->cmds)
             executor(my_env, cmd_table);
         ft_lstclear(&cmd_ll);
         //free_cmdtable(cmd_table);

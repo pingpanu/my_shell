@@ -73,4 +73,5 @@ char        *find_path(char *cmd, char **env_path);
 void        signal_operator(t_system *my_env, int status);
 int         single_executor(t_system env, t_cmd_table *cmdt, t_executor *exe);
 int         pipe_executor(t_system env, t_cmd_table *cmdt, t_executor *exe);
+void        buildins(t_system env, t_cmd_node *node, t_executor *exe);
 #endif

@@ -80,7 +80,7 @@ void    lexer(t_list **cmd_ll, char *str)
         }
     }
 }
-/*check function*/
+/*check function
 void    print_arr(char **str)
 {
     int     i = -1;
@@ -120,4 +120,4 @@ int main()
     cmd_table = parser(ll);
     check_table(cmd_table);
     return (0);
-}
+}*/

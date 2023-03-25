@@ -6,7 +6,7 @@ static void     pipe_dup(int first, int second)
     dup2(second, STDOUT_FILENO);
 }
 
-static void     close_pipe(t_executor *exe)
+static void     close_pipes(t_executor *exe)
 {
     int     i = 0;
 
@@ -45,8 +45,9 @@ int     pipe_executor(t_system env, t_cmd_table *cmdt, t_executor *exe)
                 pipe_dup(exe->pipe[2 * exe->node_ptr - 2], exe->pipe[2 * exe->node_ptr + 1]);
             close_pipes(exe);
             path = find_path(cmd_ptr->cmd_arr[0], env.env_path);
-            //if (execve(path, cmd_ptr->cmd_arr, NULL) == -1)
-            //    buildins(env, cmd_ptr->cmd_arr, exe);
+            if (execve(path, cmd_ptr->cmd_arr, NULL) == -1)
+                //buildins(env, cmd_ptr->cmd_arr, exe);
+                printf("Command not found\n");
         }
         cmd_ptr = cmd_ptr->next;
     }

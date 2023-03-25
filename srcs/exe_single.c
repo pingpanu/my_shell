@@ -44,7 +44,8 @@ int     single_executor(t_system env, t_cmd_table *cmdt, t_executor *exe)
     {
         path = find_path(cmdt->cmds->cmd_arr[0], env.env_path);
         if (execve(path, cmdt->cmds->cmd_arr, NULL) == -1)
-            buildins(env, cmds->cmd_arr, exe);
+            //buildins(env, cmds->cmd_arr, exe);
+            printf("Command not found\n");
     }
     else
         wait(NULL);
