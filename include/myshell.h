@@ -2,9 +2,9 @@
 # define MYSHELL_H
 # define _XOPEN_SOURCE 700
 # include "libft.h" //already have unistd.h and stdlib.h
+# include <stdio.h> //printf
 # include <readline/readline.h> //readline, rl_*, and add_history
 # include <readline/history.h> //readline, rl_*, and add_history
-# include <stdio.h> //printf
 # include <fcntl.h> //open, unlink, dup, dup2, 
 # include <sys/types.h> //fork
 # include <sys/wait.h> //wait, waitpid, wait3, wait4

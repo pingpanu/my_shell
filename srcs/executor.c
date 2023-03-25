@@ -47,7 +47,7 @@ int     executor(t_system my_env, t_cmd_table *cmd_table)
     }
     else
     {
-        if (single_executor(my_env, cmd_table, &exe) < 1);
+        if (single_executor(my_env, cmd_table, &exe) < 1)
             return (0);
     }
     signal_operator(&my_env, BASH_OUT);

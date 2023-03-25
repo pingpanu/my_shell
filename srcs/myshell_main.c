@@ -27,9 +27,9 @@ void    sighandler(int signal)
 
 int main(void)
 {
-    char    *cmd_str = NULL;
-    char    **cmd_table;
-    t_list  *cmd_ll = NULL;
+    char        *cmd_str = NULL;
+    t_cmd_table *cmd_table;
+    t_list      *cmd_ll = NULL;
 
     //UI to be included here
     my_env.env_path = ft_split(getenv("PATH"), ':');
@@ -56,7 +56,7 @@ int main(void)
         if (cmd_table)
             executor(my_env, cmd_table);
         ft_lstclear(&cmd_ll);
-        free_cmdtable(cmd_table);
+        //free_cmdtable(cmd_table);
     }
     printf("exit\n");
     return (0);
