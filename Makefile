@@ -7,7 +7,7 @@ LIB = libft
 INC = include
 INC_ALL = 	-I$(INC) \
 			-I$(LIB) \ 
-LINK = 	-lreadline -lft -L$(LIB) \
+LINK = 	-lreadline -L$(LIB) -lft\
 
 #color
 DEFCO = '\033[0m'
