@@ -4,13 +4,10 @@ CC = gcc
 FLAGS = -Wall -Wextra -Werror
 SDIR = srcs/
 LIB = libft
-LREAD = /usr/local/Cellar/readline/8.2.1
 INC = include
 INC_ALL = 	-I$(INC) \
-			-I$(LIB) \
-			-I$(LREAD)/include 
-LINK = 	-lreadline -L$(LREAD)/lib \
-		-lft -L$(LIB) \
+			-I$(LIB) \ 
+LINK = 	-lreadline -lft -L$(LIB) \
 
 #color
 DEFCO = '\033[0m'
@@ -43,8 +40,6 @@ $(NAME) : $(OBJS)
 	@ echo "$(GREEN)libft.a created$(DEFCO)"
 	@ $(CC) $(FLAGS) $(OBJS) $(LINK) -o $(NAME)
 	@ echo "$(GREEN)$(NAME) created$(DEFCO)" 
-
-
 
 clean:
 	@ make clean -C $(LIB)
