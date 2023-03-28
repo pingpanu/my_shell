@@ -32,13 +32,13 @@ OBJS = $(addprefix $(SDIR), $(SRC_NAME:.c=.o))
 all : $(NAME)
 
 $(SDIR)%.o : $(SDIR)%.c
-	@ $(CC) $(FLAGS) $(INC_ALL) -c $< -o $@ 
+	@ $(CC) $(FLAGS) -I include -I libft -c $< -o $@ 
 
 $(NAME) : $(OBJS)
 	@ echo "$(YELLOW)Make libft.a library$(DEFCO)"
 	@ make -C $(LIB)
 	@ echo "$(GREEN)libft.a created$(DEFCO)"
-	@ $(CC) $(FLAGS) $(OBJS) $(LINK) -o $(NAME)
+	@ $(CC) $(FLAGS) $(OBJS) -L libft -lft -lreadline -o $(NAME)
 	@ echo "$(GREEN)$(NAME) created$(DEFCO)" 
 
 clean:
