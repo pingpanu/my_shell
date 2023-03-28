@@ -13,10 +13,7 @@
 # include <signal.h> //signal, sigaction, sigemptyset, sigaddset, and kill
 # include <dirent.h> //opendir, readdir, and closedir
 # include <errno.h> //stderror, and perror
-# ifndef APPLEß
-#  include <term.h>
-# else
-#  include <termio.h>
+# include <termio.h>
 # endif
 # include <termios.h> //tc*
 # define BASH_IN 0
