@@ -23,7 +23,6 @@
 # define BASH_OPT 1
 # define BASH_OUT 2
 
-
 /*This is struct to store the computer systems*/
 typedef struct s_system 
 {
@@ -71,7 +70,7 @@ t_cmd_table *parser(t_list *cmd_ll);
 int         executor(t_system my_env, t_cmd_table *cmd_table);
 char        *find_path(char *cmd, char **env_path);
 void        signal_operator(t_system *my_env, int status);
-int         single_executor(t_system env, t_cmd_table *cmdt, t_executor *exe);
-int         pipe_executor(t_system env, t_cmd_table *cmdt, t_executor *exe);
-void        buildins(t_system env, t_cmd_node *node, t_executor *exe);
+int         single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
+int         pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
+int         buildins(t_system *env, t_cmd_node *node, t_executor *exe);
 #endif

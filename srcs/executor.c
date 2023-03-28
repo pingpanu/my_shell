@@ -40,15 +40,14 @@ int     executor(t_system my_env, t_cmd_table *cmd_table)
 
     init_exe(&exe, cmd_table);
     signal_operator(&my_env, BASH_IN);
-    printf("pipe no = %d\n", exe.pipe_no)
     if (exe.pipe_no > 0)
     {
-        if (pipe_executor(my_env, cmd_table, &exe) < 1)
+        if (pipe_executor(&my_env, cmd_table, &exe) < 1)
             return (0);
     }
     else
     {
-        if (single_executor(my_env, cmd_table, &exe) < 1)
+        if (single_executor(&my_env, cmd_table, &exe) < 1)
             return (0);
     }
     signal_operator(&my_env, BASH_OUT);
