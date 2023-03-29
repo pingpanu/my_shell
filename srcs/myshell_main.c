@@ -1,19 +1,6 @@
 #include "myshell.h"
 
-t_system    my_env; //a global variable
-
-void    free_cmdtable(char **arr)
-{
-    int     i;
-
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
-}
+t_system    my_env; //a global variable   
 
 void    sighandler(int signal)
 {
@@ -25,6 +12,36 @@ void    sighandler(int signal)
     }
 }
 
+static void     removenode(t_cmd_node *node)
+{
+    int     i = -1;
+
+    while(node->cmd_arr[++i])
+        free(node->cmd_arr[i]);
+    free(node->cmd_arr);
+    free(node);
+}
+
+static void     free_cmdtable(t_cmd_table *cmdt)
+{
+    t_cmd_node  *ptr;
+
+    ptr = NULL;
+    while (cmdt->cmds)
+    {
+        ptr = cmdt->cmds;
+        cmdt->cmds = cmdt->cmds->next;
+        removenode(ptr);
+    }
+    if (cmdt->hdoc_delim)
+        free(cmdt->hdoc_delim);
+    //if (cmdt->infile)
+    //    free(cmdt->infile);
+    //if (cmdt->outfile)
+    //    free(cmdt->outfile);
+    free(cmdt);
+}
+
 int main(void)
 {
     char        *cmd_str = NULL;
@@ -33,7 +50,6 @@ int main(void)
 
     //UI to be included here
     my_env.env_path = ft_split(getenv("PATH"), ':');
-    //printf("%s\n", my_env.env_path);
     my_env.dis_str = ft_strjoin(getenv("USER"), "@Myshell: ");
     //signal related function, using signal if fine
     my_env.act.sa_handler = sighandler;
@@ -50,14 +66,14 @@ int main(void)
         if (cmd_str == NULL)
             break ;
         add_history(cmd_str);
-        /*some function to receive cmd_str and execute it*/
         lexer(&cmd_ll, cmd_str);
         cmd_table = parser(cmd_ll);
         if (cmd_table->cmds)
             executor(my_env, cmd_table);
-        ft_lstclear(&cmd_ll);
-        //free_cmdtable(cmd_table);
+        ft_lstclear(cmd_ll);
+        free_cmdtable(cmd_table);
     }
+    rl_clear_history();
     printf("exit\n");
     return (0);
 }

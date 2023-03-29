@@ -3,28 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:47:31 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/02/18 14:52:57 by user             ###   ########.fr       */
+/*   Updated: 2023/03/29 14:01:11 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_list **lst)
+void	ft_lstclear(t_list *lst)
 {
 	t_list	*ptr;
-	t_list	*next;
 
-	if (*lst == NULL)
+	if (lst == NULL)
 		return ;
-	ptr = *lst;
-	while (ptr != NULL)
+	while (lst != NULL)
 	{
-		next = ptr->next;
+		ptr = lst;
+		lst = lst->next;
+		free(ptr->token);
 		free(ptr);
-		ptr = next;
 	}
-	*lst = NULL;
 }

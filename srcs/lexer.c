@@ -50,9 +50,10 @@ void    lexer(t_list **cmd_ll, char *str)
 
     while (right < len && left <= right)
     {
-        if (isspace(str[right])) {
+        if (isspace(str[right]))
+        {
             right++;
-            left = right;
+            left++;
         }
         else if (isQUOTE(str[right]) == true)
         {
@@ -63,7 +64,7 @@ void    lexer(t_list **cmd_ll, char *str)
             substr = subString(str, left, right);
             ft_lstadd_back(cmd_ll, ft_lstnew(newtoken(substr)));
             right++;
-            left = right;
+            left++;
             free(substr);
         }
         else
@@ -74,50 +75,9 @@ void    lexer(t_list **cmd_ll, char *str)
             {
                 substr = subString(str, left, right - 1);
                 ft_lstadd_back(cmd_ll, ft_lstnew(newtoken(substr)));
-                left = right;
-                free(substr);
             }
+            left = right;
+            free(substr);
         }
     }
 }
-/*check function
-void    print_arr(char **str)
-{
-    int     i = -1;
-
-    while(str[++i])
-        printf("%d = %s\n", i, str[i]);
-}
-
-void    check_table(t_cmd_table *table)
-{
-    t_cmd_node  *ptr;
-    char    *ret1;
-
-    ptr = table->cmds;
-    while(ptr)
-    {
-        print_arr(ptr->cmd_arr);
-        ptr = ptr->next;
-    }
-    ret1 = ft_strtrim(table->outfile, "> :");
-    printf("cmd_table infile = %s\n", table->infile);
-    printf("cmd_table outfile = %s\n", table->outfile);
-    printf("hdoc delimiter = %s\n", table->hdoc_delim);
-}
-
-int main()
-{
-    // maximum length of string is 100 here
-    char str[100];
-    t_list  *ll;
-    t_cmd_table *cmd_table;
-
-    ll = NULL;
-    printf("Enter the String: \n");
-    scanf("%[^\n]s", str);
-    lexer(&ll, str);
-    cmd_table = parser(ll);
-    check_table(cmd_table);
-    return (0);
-}*/
