@@ -39,6 +39,5 @@ void    signal_operator(t_system *my_env, int status)
         my_env->act.sa_flags = SA_RESTART;
         my_env->act.sa_handler = sighandler;
         sigaction(SIGINT, &my_env->act, NULL);
-        //tcsetattr(STDIN_FILENO, TCSAFLUSH, my_env->sh_terminal);
     }
 }

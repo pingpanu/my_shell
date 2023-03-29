@@ -104,7 +104,7 @@ t_cmd_table    *parser(t_list *cmd_ll)
             redirection_parse(right_ptr, cmd_table);
             temp = sub_linklist(left_ptr, right_ptr);
             node_addback(&cmd_table->cmds, newnode(temp));
-            ft_lstclear(temp);
+            ft_lstclear(&temp, &free_token);
             left_ptr = right_ptr->next;
             if (isredirection(right_ptr))
                 left_ptr = left_ptr->next;

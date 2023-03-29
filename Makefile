@@ -22,6 +22,7 @@ CYAN = '\033[0;36m'
 SRC_NAME = 	myshell_main.c \
 			lexer.c \
 			parser.c \
+			expander.c \
 			executor.c \
 			exe_single.c \
 			exe_signal.c \

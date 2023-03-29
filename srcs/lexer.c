@@ -7,6 +7,7 @@ https://boxofnotes.com/lexical-analyzer-in-c-program-to-detect-tokens*/
 #include <string.h>
 #include <ctype.h>
 //make token and send to linked list
+
 static char    *newtoken(char *str)
 {
     if (ft_strncmp(str, ">", 2) == 0)
@@ -30,8 +31,13 @@ bool    isQUOTE(char ch)
         return (true);
     return (false);
 }
+//delete token
+void    free_token(void *content)
+{
+    free(content);
+}
 // Extracts the SUBSTRING.
-char* subString(char* str, int left, int right)
+char    *subString(char* str, int left, int right)
 {
     int i;
     char* subStr = (char*)malloc(

@@ -31,7 +31,7 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
     {
         if (exe->in_fd < 0) {
             perror("file not found");
-            return (1);
+            return (0);
         }
         dup2(exe->in_fd, STDIN_FILENO);
     }
@@ -41,7 +41,7 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
     sigaction(SIGQUIT, &env->quit, NULL);
     exe->pid = fork();
     if (exe->pid < 0)
-        return (1);
+        return (0);
     else if (exe->pid == 0)
     {
         //if (is_buildins(cmdt->cmds->cmd_arr[0]))
@@ -49,11 +49,11 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
         //else
         //{
             if (execve(find_path(cmdt->cmds->cmd_arr[0], env->env_path), cmdt->cmds->cmd_arr, NULL) == -1)
-                printf("command not found");
+                return (0);
         //}
     }
     else
         wait(NULL);
     //tcsetattr(STDIN_FILENO, TCSANOW, env->sh_terminal);
-    return (0);
+    return (1);
 }

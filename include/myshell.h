@@ -60,8 +60,10 @@ typedef struct s_executor
 void        sighandler(int signal);
 /*in lexer.c*/
 void        lexer(t_list **cmd_ll, char* str);
+void        free_token(void *content);
 /*in parser.c*/
 t_cmd_table *parser(t_list *cmd_ll);
+void        expander(t_cmd_table *cmdt);
 /*for executor.c*/
 int         executor(t_system my_env, t_cmd_table *cmd_table);
 char        *find_path(char *cmd, char **env_path);
