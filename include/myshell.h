@@ -27,6 +27,7 @@ typedef struct s_system
     struct  sigaction   act;
     struct  sigaction   quit;
     struct  termios     *sh_terminal;
+    struct  termios     *myshell_term;
 }   t_system;
 
 /*This is command node to store all cmds*/
@@ -71,4 +72,6 @@ void        signal_operator(t_system *my_env, int status);
 int         single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
 int         pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
 int         buildins(t_system *env, t_cmd_node *node, t_executor *exe);
+int         exe_echo(t_executor *exe, t_cmd_node *node);
+int         exe_env(t_system *env, t_cmd_node *node);
 #endif

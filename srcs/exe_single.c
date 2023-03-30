@@ -44,13 +44,13 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
         return (0);
     else if (exe->pid == 0)
     {
-        //if (is_buildins(cmdt->cmds->cmd_arr[0]))
-        //    buildins(env, cmds->cmd_arr, exe);
-        //else
-        //{
-            if (execve(find_path(cmdt->cmds->cmd_arr[0], env->env_path), cmdt->cmds->cmd_arr, NULL) == -1)
+        if (is_buildins(cmdt->cmds->cmd_arr[0]))
+        {
+            if (buildins(env, cmdt->cmds, exe))
                 return (0);
-        //}
+        }
+        if (execve(find_path(cmdt->cmds->cmd_arr[0], env->env_path), cmdt->cmds->cmd_arr, NULL) == -1)
+                return (0);
     }
     else
         wait(NULL);
