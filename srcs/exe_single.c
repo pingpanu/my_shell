@@ -37,7 +37,7 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
     }
     if (cmdt->outfile != NULL)
         dup2(exe->out_fd, STDOUT_FILENO);
-    //tcsetattr(STDIN_FILENO, TCSANOW, env->sh_terminal);
+    tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
     sigaction(SIGQUIT, &env->quit, NULL);
     exe->pid = fork();
     if (exe->pid < 0)
@@ -54,6 +54,6 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
     }
     else
         wait(NULL);
-    //tcsetattr(STDIN_FILENO, TCSANOW, env->sh_terminal);
+    tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
     return (1);
 }

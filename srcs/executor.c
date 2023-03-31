@@ -34,7 +34,7 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
     }
 }
 
-static void stop_exe(t_cmd_table *cmdt, t_executor *exe)
+static int stop_exe(t_cmd_table *cmdt, t_executor *exe)
 {
     if (cmdt->infile)
         close(exe->in_fd);
@@ -53,12 +53,18 @@ int     executor(t_system my_env, t_cmd_table *cmd_table)
     if (exe.pipe_no > 1)
     {
         if (pipe_executor(&my_env, cmd_table, &exe) != 1)
+        {
+            stop_exe(cmd_table, &exe);
             return (0);
+        }
     }
     else
     {
         if (single_executor(&my_env, cmd_table, &exe) != 1)
+        {
+            stop_exe(cmd_table, &exe);
             return (0);
+        }
     }
     stop_exe(cmd_table, &exe);
     signal_operator(&my_env, BASH_OUT);

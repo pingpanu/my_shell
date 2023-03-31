@@ -83,10 +83,25 @@ static void  init_terminal(t_system *env)
 {
     tcgetattr(STDIN_FILENO, env->myshell_term);
     tcgetattr(STDIN_FILENO, env->sh_terminal);
-    env->myshell_term->c_lflag &= ~ECHOCTL;
-    env->sh_terminal->c_lflag |= ECHOCTL;
+    //env->myshell_term->c_lflag &= ~ECHOCTL;
+    //env->sh_terminal->c_lflag |= ECHOCTL;
     tcsetattr(STDIN_FILENO, TCSAFLUSH, env->myshell_term);
 }
+
+void     exit_shell(t_system *env, t_cmd_table *cmdt, t_list *cmdll)
+{
+    if (cmdt)
+        free_cmdtable(cmdt);
+    if (cmdll)
+        ft_lstclear(&cmdll, &free_token);
+    if (!env->env_path[0])
+        return ;
+    if (env->dis_str)
+        free(env->dis_str);
+    free_arr(env->env_path);
+    rl_clear_history();
+    printf("exit\n");
+}      
 
 int main(int ac, char **av, char **ev)
 {
@@ -119,13 +134,13 @@ int main(int ac, char **av, char **ev)
         add_history(cmd_str);
         lexer(&cmd_ll, cmd_str);
         cmd_table = parser(cmd_ll);
-        executor(my_env, cmd_table);
+        if (!executor(my_env, cmd_table))
+            break ;
         free_cmdtable(cmd_table);
         printf("cmd_table cleared\n");
         ft_lstclear(&cmd_ll, &free_token);
         printf("cmd_ll cleared\n");
     }
-    rl_clear_history();
-    printf("exit\n");
+    exit_shell(&my_env, NULL, NULL);
     return (0);
 }
