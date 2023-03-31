@@ -18,7 +18,8 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
 {
     int     pipe_ptr = -1;
 
-    exe->in_fd = open(cmd_table->infile, O_RDONLY);
+    if (cmd_table->infile)
+        exe->in_fd = open(cmd_table->infile, O_RDONLY);
     if (!ft_strncmp(cmd_table->outfile, ">>", 2))
         exe->out_fd = open(ft_strtrim(cmd_table->outfile, "> :"), O_CREAT | O_RDWR | O_APPEND, 0644);
     else
@@ -26,6 +27,7 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
     exe->node_ptr = -1;
     exe->nodesize = nodesize(cmd_table->cmds);
     exe->pipe_no = 2 * (exe->nodesize - 1);
+    exe->pipe = NULL;
     if (exe->pipe_no > 0)
     {
         exe->pipe = (int*)malloc(sizeof(int) * exe->pipe_no);
@@ -34,12 +36,14 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
     }
 }
 
-static int stop_exe(t_cmd_table *cmdt, t_executor *exe)
+static void stop_exe(t_cmd_table *cmdt, t_executor *exe)
 {
     if (cmdt->infile)
         close(exe->in_fd);
     if (cmdt->outfile)
         close(exe->out_fd);
+    if (exe->pipe)
+        free(exe->pipe);
 }
 
 int     executor(t_system my_env, t_cmd_table *cmd_table)

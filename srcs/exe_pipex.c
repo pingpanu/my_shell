@@ -34,11 +34,11 @@ static int      child_processes(t_system *env, t_cmd_node *node, t_executor *exe
         else
             dup_pipes(exe->pipe[exe->node_ptr * 2 - 2], exe->pipe[exe->node_ptr * 2 + 1]);  
         close_pipes(exe);
-        if (is_buildins(node->cmd_arr[0]))
-        {
-            if (buildins(env, node, exe))
-                return (1);
-        }
+        //if (is_buildins(node->cmd_arr[0]))
+        //{
+        //    if (buildins(env, node, exe))
+        //        return (1);
+        //}
         if (execve(find_path(node->cmd_arr[0], env->env_path), node->cmd_arr, NULL) == -1)
             return (1);
     }

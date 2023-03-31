@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 22:32:21 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/12/13 15:21:03 by user             ###   ########.fr       */
+/*   Updated: 2023/03/31 15:45:03 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <string.h>
-#include <stdio.h>
 
 char	*ft_strjoin(char *s1, char *s2)
 {
@@ -21,13 +19,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t	j;
 
 	if (!s1)
-	{
-		s1 = (char *)malloc(1 * sizeof(char));
-		s1[0] = '\0';
-	}
+		s1 = ft_calloc(1, sizeof(char));
 	if (!s1 || !s2)
 		return (NULL);
-	join = malloc(sizeof(char) * (strlen(s1) + strlen(s2) + 1));
+	join = ft_calloc(sizeof(char), (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!join)
 		return (NULL);
 	i = -1;
@@ -36,8 +31,9 @@ char	*ft_strjoin(char *s1, char *s2)
 		join[i] = s1[i];
 	while (s2[j])
 		join[i++] = s2[j++];
-	join[i] = '\0';
-	/*if (s1 != NULL)
-		free (s1);*/
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
 	return (join);
 }

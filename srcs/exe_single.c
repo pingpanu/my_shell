@@ -37,23 +37,23 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
     }
     if (cmdt->outfile != NULL)
         dup2(exe->out_fd, STDOUT_FILENO);
-    tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
+    //tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
     sigaction(SIGQUIT, &env->quit, NULL);
     exe->pid = fork();
     if (exe->pid < 0)
         return (0);
     else if (exe->pid == 0)
     {
-        if (is_buildins(cmdt->cmds->cmd_arr[0]))
-        {
-            if (buildins(env, cmdt->cmds, exe))
-                return (0);
-        }
+        //if (is_buildins(cmdt->cmds->cmd_arr[0]))
+        //{
+        //    if (buildins(env, cmdt->cmds, exe))
+        //        return (0);
+        //}
         if (execve(find_path(cmdt->cmds->cmd_arr[0], env->env_path), cmdt->cmds->cmd_arr, NULL) == -1)
                 return (0);
     }
     else
         wait(NULL);
-    tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
+    //tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
     return (1);
 }

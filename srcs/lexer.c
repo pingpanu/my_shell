@@ -8,20 +8,31 @@ https://boxofnotes.com/lexical-analyzer-in-c-program-to-detect-tokens*/
 #include <ctype.h>
 //make token and send to linked list
 
-static char    *newtoken(char *str)
+/*static char     *retandfree(char *s1, char *s2)
+{
+    char    *ret;
+
+    ret = ft_strdup(s2);
+    if (s1)
+        free(s1);
+    if (s2)
+        free(s2);
+    return (ret);
+}*/
+
+static char     *newtoken(char *str)
 {
     if (ft_strncmp(str, ">", 2) == 0)
-        return (ft_strdup("GREAT"));
-    else if (ft_strncmp(str, "<", 2) == 0)
-        return (ft_strdup("LESS"));
-    else if (ft_strncmp(str, ">>", 3) == 0)
-        return (ft_strdup("GREATGREAT"));
-    else if (ft_strncmp(str, "<<", 3) == 0)
-        return (ft_strdup("HDOC"));
-    else if (ft_strncmp(str, "|", 2) == 0)
-        return (ft_strdup("PIPE"));
-    else
-        return (ft_strdup(str));
+        str = ft_strdup("GREAT");
+    if (ft_strncmp(str, "<", 2) == 0)
+        str = ft_strdup("LESS");
+    if (ft_strncmp(str, ">>", 3) == 0)
+        str = ft_strdup("GREATGREAT");
+    if (ft_strncmp(str, "<<", 3) == 0)
+        str = ft_strdup("HDOC");
+    if (ft_strncmp(str, "|", 2) == 0)
+        str = ft_strdup("PIPE");
+    return (str);
 }
 
 //Return true if its quote
