@@ -69,13 +69,13 @@ int     isredirection(t_list *ptr)
 
 void    redirection_parse(t_list *ptr, t_cmd_table *cmd_table)
 {
-    if (ft_strncmp(ptr->token, "LESS", 5) == 0)
+    if (ft_strncmp(ptr->token, "<", 2) == 0)
         cmd_table->infile = ft_strdup(ptr->next->token);
-    if (ft_strncmp(ptr->token, "GREAT", 6) == 0)
+    if (ft_strncmp(ptr->token, ">", 2) == 0)
         cmd_table->outfile = ft_strjoin("> :", ptr->next->token);
-    if (ft_strncmp(ptr->token, "GREATGREAT", 11) == 0)
+    if (ft_strncmp(ptr->token, ">>", 3) == 0)
         cmd_table->outfile = ft_strjoin(">> :", ptr->next->token);
-    if (ft_strncmp(ptr->token, "HDOC", 5) == 0)
+    if (ft_strncmp(ptr->token, "<<", 3) == 0)
         cmd_table->hdoc_delim = ft_strdup(ptr->next->token);
 }
 
@@ -97,7 +97,7 @@ t_cmd_table    *parser(t_list *cmd_ll)
     right_ptr = cmd_ll;
     while (right_ptr)
     {
-        if (isredirection(right_ptr) || !ft_strncmp(right_ptr->token, "PIPE", 5))
+        if (isredirection(right_ptr) || !ft_strncmp(right_ptr->token, "|", 2))
         {
             redirection_parse(right_ptr, cmd_table);
             temp = sub_linklist(left_ptr, right_ptr);
