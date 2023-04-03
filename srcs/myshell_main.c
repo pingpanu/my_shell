@@ -52,7 +52,6 @@ static void     free_cmdtable(t_cmd_table *cmdt)
     if (cmdt->outfile)
         free(cmdt->outfile);
     free(cmdt);
-    cmdt->cmds = NULL;
 }
 
 static int  array_size(char **arr)
@@ -80,14 +79,16 @@ static char **copy_env(char **ev)
     return (env);
 }
 
-/*static void  init_terminal(t_system *env)
+static void  init_terminal(t_system *env)
 {
+    env->myshell_term = malloc(sizeof(struct termios));
+    env->myshell_term->c_iflag = 0;
+    env->myshell_term->c_oflag = 0;
+    env->myshell_term->c_cflag = 0;
+    env->myshell_term->c_lflag = 0;
     tcgetattr(STDIN_FILENO, env->myshell_term);
-    tcgetattr(STDIN_FILENO, env->sh_terminal);
-    env->myshell_term->c_lflag &= ~(ECHO | ECHOE | ECHONL| ECHOK);
-    env->sh_terminal->c_lflag |= ECHOCTL;
     tcsetattr(STDIN_FILENO, TCSAFLUSH, env->myshell_term);
-}*/
+}
 
 char    *curr_dir(void)
 {
@@ -102,6 +103,7 @@ char    *curr_dir(void)
 
 void     exit_shell(t_system *env)
 {
+    free(env->myshell_term);
     free_arr(env->env_cop);
     free_arr(env->env_path);
     rl_clear_history();
@@ -131,7 +133,7 @@ int main(int ac, char **av, char **ev)
     my_env.quit.sa_flags = 0;
     sigemptyset(&my_env.quit.sa_mask);
     sigaction (SIGQUIT, &my_env.quit, NULL);
-    //init_terminal(&my_env);
+    init_terminal(&my_env);
     while (1)
     {
         cmd_str = readline(my_env.dis_str);

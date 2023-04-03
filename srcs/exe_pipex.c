@@ -55,6 +55,7 @@ int     pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
         return (0);
     }
     cmd_ptr = cmdt->cmds;
+    tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
     signal_operator(env, BASH_OPT);
     while (cmd_ptr)
     {
@@ -64,5 +65,6 @@ int     pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
     }
     close_pipes(exe);
     waitpid(-1, NULL, 0);
+    tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
     return (1);
 }
