@@ -92,6 +92,7 @@ t_cmd_table    *parser(t_list *cmd_ll)
     cmd_table->cmds = NULL;
     cmd_table->infile = NULL;
     cmd_table->outfile = NULL;
+    cmd_table->hdoc_delim = NULL;
     left_ptr = cmd_ll;
     right_ptr = cmd_ll;
     while (right_ptr)

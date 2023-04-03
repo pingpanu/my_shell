@@ -6,33 +6,21 @@ https://boxofnotes.com/lexical-analyzer-in-c-program-to-detect-tokens*/
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-//make token and send to linked list
-
-/*static char     *retandfree(char *s1, char *s2)
-{
-    char    *ret;
-
-    ret = ft_strdup(s2);
-    if (s1)
-        free(s1);
-    if (s2)
-        free(s2);
-    return (ret);
-}*/
 
 static char     *newtoken(char *str)
 {
     if (ft_strncmp(str, ">", 2) == 0)
-        str = ft_strdup("GREAT");
-    if (ft_strncmp(str, "<", 2) == 0)
-        str = ft_strdup("LESS");
-    if (ft_strncmp(str, ">>", 3) == 0)
-        str = ft_strdup("GREATGREAT");
-    if (ft_strncmp(str, "<<", 3) == 0)
-        str = ft_strdup("HDOC");
-    if (ft_strncmp(str, "|", 2) == 0)
-        str = ft_strdup("PIPE");
-    return (str);
+        return (ft_strdup("GREAT"));
+    else if (ft_strncmp(str, "<", 2) == 0)
+        return (ft_strdup("LESS"));
+    else if (ft_strncmp(str, ">>", 3) == 0)
+        return (ft_strdup("GREATGREAT"));
+    else if (ft_strncmp(str, "<<", 3) == 0)
+        return (ft_strdup("HDOC"));
+    else if (ft_strncmp(str, "|", 2) == 0)
+        return (ft_strdup("PIPE"));
+    else
+        return (str);
 }
 
 //Return true if its quote
@@ -47,17 +35,7 @@ void    free_token(void *content)
 {
     free(content);
 }
-// Extracts the SUBSTRING.
-char    *subString(char* str, int left, int right)
-{
-    int i;
-    char* subStr = (char*)malloc(
-                sizeof(char) * (right - left+2));
-    for (i = left; i <= right; i++)
-        subStr[i - left] = str[i];
-    subStr[right - left + 1] = '\0';
-    return (subStr);
-}
+
 // Parsing the input STRING.
 void    lexer(t_list **cmd_ll, char *str)
 {
@@ -78,7 +56,7 @@ void    lexer(t_list **cmd_ll, char *str)
             right++;
             while (str[right] != quote && right < len)
                 right++;
-            substr = subString(str, left, right);
+            substr = ft_substr(str, left, (right - left + 1));
             ft_lstadd_back(cmd_ll, ft_lstnew(newtoken(substr)));
             right++;
             left++;
@@ -89,10 +67,8 @@ void    lexer(t_list **cmd_ll, char *str)
             right++;
             while (isspace(str[right]) == 0 && right < len)
                 right++;
-            {
-                substr = subString(str, left, right - 1);
-                ft_lstadd_back(cmd_ll, ft_lstnew(newtoken(substr)));
-            }
+            substr = ft_substr(str, left, (right - left));
+            ft_lstadd_back(cmd_ll, ft_lstnew(newtoken(substr)));
             left = right;
             free(substr);
         }

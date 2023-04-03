@@ -22,8 +22,9 @@
 /*This is struct to store the computer systems*/
 typedef struct s_system 
 {
+    char    **env_cop; //copy to store env for execution
     char    **env_path; //path variable array
-    char    *dis_str; //User displayed at readline function
+    char    dis_str[500]; //User displayed at readline function
     struct  sigaction   act;
     struct  sigaction   quit;
     struct  termios     *sh_terminal;

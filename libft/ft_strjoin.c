@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 22:32:21 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/03/31 15:45:03 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/03/31 22:00:05 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ char	*ft_strjoin(char *s1, char *s2)
 		join[i] = s1[i];
 	while (s2[j])
 		join[i++] = s2[j++];
-	if (s1)
+	/*if (s1)
 		free(s1);
 	if (s2)
-		free(s2);
+		free(s2);*/
 	return (join);
 }
