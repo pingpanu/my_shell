@@ -60,6 +60,8 @@ typedef struct s_executor
 
 /*in myshell_main.c*/
 void        sighandler(int signal);
+void        exit_shell(t_system *env, t_cmd_table *cmdt, t_list *cmdll, int exit_stat);
+char        *curr_dir(void);
 /*in lexer.c*/
 void        lexer(t_list **cmd_ll, char* str);
 void        free_token(void *content);
@@ -67,12 +69,18 @@ void        free_token(void *content);
 t_cmd_table *parser(t_list *cmd_ll);
 void        expander(t_cmd_table *cmdt);
 /*for executor.c*/
-int         executor(t_system my_env, t_cmd_table *cmd_table);
+int         executor(t_system *my_env, t_cmd_table *cmd_table, t_list *cmdll);
 char        *find_path(char *cmd, char **env_path);
 void        signal_operator(t_system *my_env, int status);
 int         single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
 int         pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
-int         buildins(t_system *env, t_cmd_node *node, t_executor *exe);
+/*buildin*/
+int         is_buildins(char *cmd);
+int         buildins(t_system *env, t_cmd_table *cmdt, t_executor *exe, t_list *cmdll);
 int         exe_echo(t_executor *exe, t_cmd_node *node);
 int         exe_env(t_system *env, t_cmd_node *node);
+int         exe_cd(t_system *env, char *path);
+int         exe_pwd(t_cmd_node *node);
+int         exe_unset(t_cmd_node *node, t_system *env);
+int         exe_export(t_cmd_node *node, t_system *env);
 #endif

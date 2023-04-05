@@ -27,6 +27,13 @@ SRC_NAME = 	myshell_main.c \
 			exe_single.c \
 			exe_signal.c \
 			exe_pipex.c \
+			buildins.c \
+			buildin/exe_cd.c \
+			buildin/exe_echo.c \
+			buildin/exe_env.c \
+			buildin/exe_export.c \
+			buildin/exe_pwd.c \
+			buildin/exe_unset.c \
 
 OBJS = $(addprefix $(SDIR), $(SRC_NAME:.c=.o))
 
