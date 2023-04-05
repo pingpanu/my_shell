@@ -38,6 +38,8 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
 
 static void stop_exe(t_cmd_table *cmdt, t_executor *exe)
 {
+    if (exe->pid)
+        kill(exe->pid, 0);
     if (cmdt->infile)
         close(exe->in_fd);
     if (cmdt->outfile)
@@ -46,31 +48,35 @@ static void stop_exe(t_cmd_table *cmdt, t_executor *exe)
         free(exe->pipe);
 }
 
-int     executor(t_system my_env, t_cmd_table *cmd_table)
+static int  exit_executor(t_cmd_table *cmdt, t_system *myenv, t_executor *exe, int status)
+{
+    stop_exe(cmdt, exe);
+    signal_operator(myenv, BASH_OUT);
+    return (status);
+}
+
+int     executor(t_system *my_env, t_cmd_table *cmdt, t_list *cmdll)
 {
     t_executor  exe;
 
-    if (!cmd_table)
+    if (!cmdt)
         return (0);
-    init_exe(&exe, cmd_table);
-    signal_operator(&my_env, BASH_IN);
-    if (exe.pipe_no > 1)
+    init_exe(&exe, cmdt);
+    signal_operator(my_env, BASH_IN);
+    if (is_buildins(cmdt->cmds->cmd_arr[0]))
     {
-        if (pipe_executor(&my_env, cmd_table, &exe) != 1)
-        {
-            stop_exe(cmd_table, &exe);
-            return (0);
-        }
+        buildins(my_env, cmdt, &exe, cmdll);
+        return (exit_executor(cmdt, my_env, &exe, 1));
+    }
+    else if (exe.pipe_no > 1)
+    {
+        if (pipe_executor(my_env, cmdt, &exe) != 1)
+            return (exit_executor(cmdt, my_env, &exe, 0));
     }
     else
     {
-        if (single_executor(&my_env, cmd_table, &exe) != 1)
-        {
-            stop_exe(cmd_table, &exe);
-            return (0);
-        }
+        if (single_executor(my_env, cmdt, &exe) != 1)
+            return (exit_executor(cmdt, my_env, &exe, 0));
     }
-    stop_exe(cmd_table, &exe);
-    signal_operator(&my_env, BASH_OUT);
-    return (1);
+    return (exit_executor(cmdt, my_env, &exe, 1));
 }

@@ -6,7 +6,6 @@ char    *find_path(char *cmd, char **env_path)
     char    *ret;
     int     i = -1;
 
-    /*check if argv[1] is cmd installed in the computer*/
     while (env_path[++i])
     {
         proto_ret = ft_strjoin(env_path[i], "/");
@@ -16,25 +15,22 @@ char    *find_path(char *cmd, char **env_path)
             return (ret);
         free(ret);
     }
-    /*when argv[1] is not cmd installed in the computer*/
-    /*check if we can access the file*/
     if (access(cmd, F_OK) == 0)
          return (cmd);
-   printf("%s: No such file or directory\n", cmd);
+    printf("%s: No such file or directory\n", cmd);
     return (NULL);
 }
 
 int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
 {
     signal_operator(env, BASH_OPT);
-    if (cmdt->infile != NULL)
+    if ((exe->in_fd < 0 && cmdt->infile) || (exe->out_fd && cmdt->outfile))
     {
-        if (exe->in_fd < 0) {
-            perror("file not found");
-            return (0);
-        }
-        dup2(exe->in_fd, STDIN_FILENO);
+        perror("file not found\n");
+        return (0);
     }
+    if (cmdt->infile != NULL)
+        dup2(exe->in_fd, STDIN_FILENO);
     if (cmdt->outfile != NULL)
         dup2(exe->out_fd, STDOUT_FILENO);
     tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
@@ -44,13 +40,8 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
         return (0);
     else if (exe->pid == 0)
     {
-        //if (is_buildins(cmdt->cmds->cmd_arr[0]))
-        //{
-        //    if (buildins(env, cmdt->cmds, exe))
-        //        return (0);
-        //}
-        if (execve(find_path(cmdt->cmds->cmd_arr[0], env->env_path), cmdt->cmds->cmd_arr, NULL) == -1)
-                return (0);
+        if (execve(find_path(cmdt->cmds->cmd_arr[0], env->env_path), cmdt->cmds->cmd_arr, NULL) < 0)
+            return (0);
     }
     else
         wait(NULL);

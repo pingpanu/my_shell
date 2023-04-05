@@ -82,10 +82,6 @@ static char **copy_env(char **ev)
 static void  init_terminal(t_system *env)
 {
     env->myshell_term = malloc(sizeof(struct termios));
-    env->myshell_term->c_iflag = 0;
-    env->myshell_term->c_oflag = 0;
-    env->myshell_term->c_cflag = 0;
-    env->myshell_term->c_lflag = 0;
     tcgetattr(STDIN_FILENO, env->myshell_term);
     tcsetattr(STDIN_FILENO, TCSAFLUSH, env->myshell_term);
 }
@@ -101,12 +97,20 @@ char    *curr_dir(void)
     return (ret);
 }
 
-void     exit_shell(t_system *env)
+void     exit_shell(t_system *env, t_cmd_table *cmdt, t_list *cmdll, int exit_stat)
 {
+    if (exit_stat != 0)
+        perror("Myshell");
+    if (cmdt)
+        free_cmdtable(cmdt);
+    if (cmdll)
+        ft_lstclear(&cmdll, &free_token);
     free(env->myshell_term);
     free_arr(env->env_cop);
     free_arr(env->env_path);
     rl_clear_history();
+    printf("exit\n");
+    exit(exit_stat);
 }
 
 int main(int ac, char **av, char **ev)
@@ -119,7 +123,6 @@ int main(int ac, char **av, char **ev)
         printf("Myshell supposed to run without args\n");
         exit(1);
     }
-    //UI to be included here
     my_env.env_cop = copy_env(ev);
     my_env.env_path = ft_split(getenv("PATH"), ':');
     ft_strlcat(my_env.dis_str, "Myshell@ ", 10);
@@ -135,17 +138,18 @@ int main(int ac, char **av, char **ev)
     sigaction (SIGQUIT, &my_env.quit, NULL);
     init_terminal(&my_env);
     while (1)
-    {
+    {    
         cmd_str = readline(my_env.dis_str);
         if (cmd_str == NULL)
             break ;
         add_history(cmd_str);
         lexer(&cmd_ll, cmd_str);
         cmd_table = parser(cmd_ll);
-        executor(my_env, cmd_table);
+        if (!executor(&my_env, cmd_table, cmd_ll)) 
+            exit_shell(&my_env, cmd_table, cmd_ll, 1);
         free_cmdtable(cmd_table);
         ft_lstclear(&cmd_ll, &free_token);
     }
-    exit_shell(&my_env);
+    exit_shell(&my_env, NULL, NULL, 0);
     return (0);
 }

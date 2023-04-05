@@ -1,23 +1,16 @@
 #include "myshell.h"
 
-static int  checkvalid(char *str)
-{
-    if (!ft_isalpha(str[0]) && str[0] != '-')
-        return (1);
-    return (0);
-}
-
 static int  check_export_str(char *str)
 {
     int i = -1;
 
     while (str[++i])
     {
-        if (str[i] = '[' && str[i + 1] != '=')
+        if (str[i] == '[' && str[i + 1] != '=')
             return (0);
         if (!ft_isalnum(str[i]))
             return (0);
-        if (i = ft_strlen(str) && str[i] != ']')
+        if (i == (int)ft_strlen(str) && str[i] != ']')
             return (0);
     }
     return (1);
@@ -54,7 +47,7 @@ static char **add_env(char *name, char *value, char **arr)
     i = -1;
     while(arr[++i])
         ret[i] = ft_strdup(arr[i]);
-    ret[i] = ft_strjoin(name, '=');
+    ret[i] = ft_strjoin(name, "=");
     ret[i] = ft_strjoin(ret[i], value);
     return (ret);
 }

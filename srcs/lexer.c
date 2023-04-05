@@ -7,22 +7,6 @@ https://boxofnotes.com/lexical-analyzer-in-c-program-to-detect-tokens*/
 #include <string.h>
 #include <ctype.h>
 
-/*static char     *newtoken(char *str)
-{
-    if (ft_strncmp(str, ">", 2) == 0)
-        return (ft_strdup("GREAT"));
-    else if (ft_strncmp(str, "<", 2) == 0)
-        return (ft_strdup("LESS"));
-    else if (ft_strncmp(str, ">>", 3) == 0)
-        return (ft_strdup("GREATGREAT"));
-    else if (ft_strncmp(str, "<<", 3) == 0)
-        return (ft_strdup("HDOC"));
-    else if (ft_strncmp(str, "|", 2) == 0)
-        return (ft_strdup("PIPE"));
-    else
-        return (ft_strdup(str));
-}*/
-
 //Return true if its quote
 bool    isQUOTE(char ch)
 {
@@ -68,7 +52,7 @@ void    lexer(t_list **cmd_ll, char *str)
             while (isspace(str[right]) == 0 && right < len)
                 right++;
             substr = ft_substr(str, left, (right - left));
-            ft_lstadd_back(cmd_ll, ft_lstnew(substr));
+            ft_lstadd_back(cmd_ll, ft_lstnew(ft_strdup(substr)));
             left = right;
             free(substr);
         }

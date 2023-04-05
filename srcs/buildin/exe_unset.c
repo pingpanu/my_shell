@@ -25,9 +25,9 @@ static void     remove_char_arr(char *torem, char **arr)
     {
         if (ft_strncmp(arr[i], torem, ft_strlen(torem)))
             start = 1;
-        if (start = 1)
+        if (start == 1)
             arr[i] = ft_strdup(arr[i + 1]);
-        if (i = size)
+        if (i == size)
         {
             free(arr[i]);
             arr[i] = NULL;

@@ -27,6 +27,21 @@ static void quote_remove(char **cmd_arr)
         i++;
     }
 }
+/*
+static void add_sign(char **cmd_arr)
+{
+    int     i = 0;
+    char    *path;
+    char    *buf;
+
+    while (cmd_arr[++i])
+    {
+        if (cmd_arr[i][0] == '$')
+        {
+            path = 
+        }
+    }
+}*/
 
 void    expander(t_cmd_table *cmdt)
 {
@@ -38,6 +53,15 @@ void    expander(t_cmd_table *cmdt)
     while (ptr)
     {
         quote_remove(ptr->cmd_arr);
+        /*if (ptr->cmd_arr[0] == 39)
+            quote_remove(ptr->cmd_arr);
+        else if (ptr->cmd_arr[0] == 34)
+        {
+            quote_remove(ptr->cmd_arr);
+            add_sign(ptr->cmd_arr);
+        }
+        else
+            add_sign(ptr->cmd_arr);*/
         ptr = ptr->next;
     }
 }

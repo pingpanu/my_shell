@@ -34,22 +34,17 @@ static int      child_processes(t_system *env, t_cmd_node *node, t_executor *exe
         else
             dup_pipes(exe->pipe[exe->node_ptr * 2 - 2], exe->pipe[exe->node_ptr * 2 + 1]);  
         close_pipes(exe);
-        //if (is_buildins(node->cmd_arr[0]))
-        //{
-        //    if (buildins(env, node, exe))
-        //        return (1);
-        //}
-        if (execve(find_path(node->cmd_arr[0], env->env_path), node->cmd_arr, NULL) == -1)
-            return (1);
+        if (execve(find_path(node->cmd_arr[0], env->env_path), node->cmd_arr, NULL) < 0)
+            return (0);
     }
-    return (0);
+    return (1);
 }
 
 int     pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
 {
     t_cmd_node  *cmd_ptr;
 
-    if ((exe->in_fd < 0 && cmdt->infile != NULL) || (exe->out_fd < 1 && cmdt->outfile != NULL))
+    if ((exe->in_fd < 0 && cmdt->infile) || (exe->out_fd < 0 && cmdt->outfile))
     {
         perror("file not found\n");
         return (0);
@@ -59,7 +54,7 @@ int     pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
     signal_operator(env, BASH_OPT);
     while (cmd_ptr)
     {
-        if (child_processes(env, cmd_ptr, exe) != 0)
+        if (child_processes(env, cmd_ptr, exe) != 1)
             return (0);
         cmd_ptr = cmd_ptr->next;
     }
