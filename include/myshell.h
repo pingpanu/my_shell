@@ -43,8 +43,7 @@ typedef struct s_cmd_table
 {
     t_cmd_node  *cmds;
     char        *infile;
-    char        *outfile;
-    char        *hdoc_delim;  
+    char        *outfile; 
 }   t_cmd_table;
 
 typedef struct s_executor

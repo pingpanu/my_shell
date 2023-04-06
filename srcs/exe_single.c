@@ -43,8 +43,7 @@ int     single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe)
         if (execve(find_path(cmdt->cmds->cmd_arr[0], env->env_path), cmdt->cmds->cmd_arr, NULL) < 0)
             return (0);
     }
-    else
-        wait(NULL);
+    waitpid(-1, NULL, 0);
     tcsetattr(STDIN_FILENO, TCSANOW, env->myshell_term);
     return (1);
 }

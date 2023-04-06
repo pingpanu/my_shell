@@ -61,8 +61,8 @@ void    node_addback(t_cmd_node **node, t_cmd_node *new)
 
 int     isredirection(t_list *ptr)
 {
-    if (!ft_strncmp(ptr->token, "GREAT", 6) || !ft_strncmp(ptr->token, "LESS", 5) ||
-        !ft_strncmp(ptr->token, "GREATGREAT", 11) || !ft_strncmp(ptr->token, "HDOC", 5))
+    if (!ft_strncmp(ptr->token, ">", 2) || !ft_strncmp(ptr->token, "<", 2) ||
+        !ft_strncmp(ptr->token, ">>", 3) || !ft_strncmp(ptr->token, "<<", 3))
         return (1);
     return (0);
 }
@@ -70,13 +70,13 @@ int     isredirection(t_list *ptr)
 void    redirection_parse(t_list *ptr, t_cmd_table *cmd_table)
 {
     if (ft_strncmp(ptr->token, "<", 2) == 0)
-        cmd_table->infile = ft_strdup(ptr->next->token);
+        cmd_table->infile = ft_strjoin("< :", ptr->next->token);
     if (ft_strncmp(ptr->token, ">", 2) == 0)
         cmd_table->outfile = ft_strjoin("> :", ptr->next->token);
     if (ft_strncmp(ptr->token, ">>", 3) == 0)
         cmd_table->outfile = ft_strjoin(">> :", ptr->next->token);
     if (ft_strncmp(ptr->token, "<<", 3) == 0)
-        cmd_table->hdoc_delim = ft_strdup(ptr->next->token);
+        cmd_table->infile = ft_strjoin("<< :", ptr->next->token);
 }
 
 t_cmd_table    *parser(t_list *cmd_ll)
@@ -92,7 +92,6 @@ t_cmd_table    *parser(t_list *cmd_ll)
     cmd_table->cmds = NULL;
     cmd_table->infile = NULL;
     cmd_table->outfile = NULL;
-    cmd_table->hdoc_delim = NULL;
     left_ptr = cmd_ll;
     right_ptr = cmd_ll;
     while (right_ptr)
@@ -111,5 +110,6 @@ t_cmd_table    *parser(t_list *cmd_ll)
             node_addback(&cmd_table->cmds, newnode(left_ptr));
         right_ptr = right_ptr->next;
     }
+    expander(cmd_table);
     return (cmd_table);
 }

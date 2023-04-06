@@ -1,5 +1,21 @@
 #include "myshell.h"
 
+static void     write_hdoc(char *infile, t_executor *exe)
+{
+    char    *str;
+    char    *delim;
+
+    delim = ft_strtrim(infile, "< :");
+    while (1)
+    {
+        str = readline("heredoc> ");
+        if (!ft_strncmp(str, delim, ft_strlen(delim)))
+            break;
+        ft_putendl_fd(str, exe->in_fd);
+    }
+    close(exe->in_fd);
+}
+
 int     nodesize(t_cmd_node *cmds)
 {
     t_cmd_node  *ptr;
@@ -18,11 +34,19 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
 {
     int     pipe_ptr = -1;
 
-    if (cmd_table->infile)
-        exe->in_fd = open(cmd_table->infile, O_RDONLY);
+    exe->in_fd = 0;
+    exe->out_fd = 0;
+    if (!ft_strncmp(cmd_table->infile, "<", 1))
+        exe->in_fd = open(ft_strtrim(cmd_table->infile, "< :"), O_RDONLY);
+    if (!ft_strncmp(cmd_table->infile, "<<", 2))
+    {
+        exe->in_fd = open(".hdoc.temp", O_CREAT | O_WRONLY | O_APPEND, 0644);
+        write_hdoc(cmd_table->infile, exe);
+        exe->in_fd = open(".hdoc.temp", O_RDONLY);
+    }
     if (!ft_strncmp(cmd_table->outfile, ">>", 2))
         exe->out_fd = open(ft_strtrim(cmd_table->outfile, "> :"), O_CREAT | O_RDWR | O_APPEND, 0644);
-    else
+    if (!ft_strncmp(cmd_table->outfile, ">", 1))
         exe->out_fd = open(ft_strtrim(cmd_table->outfile, "> :"), O_CREAT | O_RDWR | O_TRUNC, 0644);
     exe->node_ptr = -1;
     exe->nodesize = nodesize(cmd_table->cmds);
@@ -38,10 +62,12 @@ void    init_exe(t_executor *exe, t_cmd_table *cmd_table)
 
 static void stop_exe(t_cmd_table *cmdt, t_executor *exe)
 {
-    if (exe->pid)
-        kill(exe->pid, 0);
     if (cmdt->infile)
+    {
+        if (ft_strncmp(cmdt->infile, "<<", 2))
+            unlink(".hdoc.tmp");
         close(exe->in_fd);
+    }
     if (cmdt->outfile)
         close(exe->out_fd);
     if (exe->pipe)

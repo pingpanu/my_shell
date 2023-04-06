@@ -45,8 +45,6 @@ static void     node_clear(t_cmd_node **node)
 static void     free_cmdtable(t_cmd_table *cmdt)
 {
     node_clear(&cmdt->cmds);
-    if (cmdt->hdoc_delim)
-        free(cmdt->hdoc_delim);
     if (cmdt->infile)
         free(cmdt->infile);
     if (cmdt->outfile)

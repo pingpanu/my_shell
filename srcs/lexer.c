@@ -41,9 +41,9 @@ void    lexer(t_list **cmd_ll, char *str)
             while (str[right] != quote && right < len)
                 right++;
             substr = ft_substr(str, left, (right - left + 1));
-            ft_lstadd_back(cmd_ll, ft_lstnew(substr));
+            ft_lstadd_back(cmd_ll, ft_lstnew(ft_strdup(substr)));
             right++;
-            left++;
+            left = right;
             free(substr);
         }
         else

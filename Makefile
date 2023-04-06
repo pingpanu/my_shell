@@ -52,6 +52,7 @@ $(NAME) : $(OBJS)
 clean:
 	@ make clean -C $(LIB)
 	@ echo "$(YELLOW)libft.a removed$(DEFCO)"
+	@ rm $(SDIR)buildin/*.o
 	@ rm $(SDIR)*.o 
 	@ echo "$(GREEN)Object files removed$(DEFCO)"
 
