@@ -1,115 +1,62 @@
-#include "myshell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/09 17:46:53 by pingpanu          #+#    #+#             */
+/*   Updated: 2023/04/10 16:45:57 by pingpanu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-char    **ll_to_strarr(t_list *cmd_ll)
+#include "minishell.h"
+
+static t_cmd_table	*start_parse(void)
 {
-    char    **argv;
-    int     i = 0;
-    t_list  *ll_ptr = cmd_ll;
+	t_cmd_table	*ret;
 
-    argv = malloc(sizeof(char *) * (ft_lstsize(cmd_ll) + 1));
-    while (ll_ptr != NULL)
-    {
-        argv[i] = ft_strdup(ll_ptr->token);
-        ll_ptr = ll_ptr->next;
-        i++;
-    }
-    argv[i] = NULL;
-    return (argv);
+	ret = malloc(sizeof(t_cmd_table));
+	if (!ret)
+		return (NULL);
+	ret->cmds = NULL;
+	ret->infile = NULL;
+	ret->outfile = NULL;
+	return (ret);
 }
 
-t_list  *sub_linklist(t_list *left, t_list *right)
+static void	run_parser(t_cmd_table *cmd_table, t_list **r, t_list **l)
 {
-    t_list  *ret;
+	t_list	*temp;
 
-    ret = NULL;
-    while(left && ft_strncmp(left->token, right->token, ft_strlen(right->token)) != 0)
-    {
-        ft_lstadd_back(&ret, ft_lstnew(left->token));
-        left = left->next;
-    }
-    return (ret);
+	temp = NULL;
+	redirection_parse(*r, cmd_table);
+	temp = sub_linklist(*l, *r);
+	node_addback(&cmd_table->cmds, newnode(temp));
+	if (temp != NULL)
+		free(temp);
+	*l = (*r)->next;
+	if (isredirection(*r))
+		*l = (*l)->next;
+	free((*r)->token);
 }
 
-t_cmd_node  *newnode(t_list *temp)
+t_cmd_table	*parser(t_list *cmd_ll)
 {
-    t_cmd_node  *new;
+	t_cmd_table	*cmd_table;
+	t_list		*left;
+	t_list		*right;
 
-    new = malloc(sizeof(t_cmd_node));
-    if (!new || !temp)
-        return (NULL);
-    new->cmd_arr = ll_to_strarr(temp);
-    new->next = NULL;
-    return (new);
-}
-
-void    node_addback(t_cmd_node **node, t_cmd_node *new)
-{
-    t_cmd_node  *tmp_nd;
-    
-    if (!new)
-        return ;
-    if (*node == NULL)
-        *node = new;
-    else
-    {
-        tmp_nd = *node;
-        while(tmp_nd->next != NULL)
-            tmp_nd = tmp_nd->next;
-        tmp_nd->next = new;
-    }
-}
-
-int     isredirection(t_list *ptr)
-{
-    if (!ft_strncmp(ptr->token, ">", 2) || !ft_strncmp(ptr->token, "<", 2) ||
-        !ft_strncmp(ptr->token, ">>", 3) || !ft_strncmp(ptr->token, "<<", 3))
-        return (1);
-    return (0);
-}
-
-void    redirection_parse(t_list *ptr, t_cmd_table *cmd_table)
-{
-    if (ft_strncmp(ptr->token, "<", 2) == 0)
-        cmd_table->infile = ft_strjoin("< :", ptr->next->token);
-    if (ft_strncmp(ptr->token, ">", 2) == 0)
-        cmd_table->outfile = ft_strjoin("> :", ptr->next->token);
-    if (ft_strncmp(ptr->token, ">>", 3) == 0)
-        cmd_table->outfile = ft_strjoin(">> :", ptr->next->token);
-    if (ft_strncmp(ptr->token, "<<", 3) == 0)
-        cmd_table->infile = ft_strjoin("<< :", ptr->next->token);
-}
-
-t_cmd_table    *parser(t_list *cmd_ll)
-{
-    t_cmd_table     *cmd_table;
-    t_list          *left_ptr;
-    t_list          *right_ptr;
-    t_list          *temp;
-    
-    cmd_table = malloc(sizeof(t_cmd_table));
-    if (!cmd_table)
-        return (NULL);
-    cmd_table->cmds = NULL;
-    cmd_table->infile = NULL;
-    cmd_table->outfile = NULL;
-    left_ptr = cmd_ll;
-    right_ptr = cmd_ll;
-    while (right_ptr)
-    {
-        if (isredirection(right_ptr) || !ft_strncmp(right_ptr->token, "|", 2))
-        {
-            redirection_parse(right_ptr, cmd_table);
-            temp = sub_linklist(left_ptr, right_ptr);
-            node_addback(&cmd_table->cmds, newnode(temp));
-            ft_lstclear(&temp, &free_token);
-            left_ptr = right_ptr->next;
-            if (isredirection(right_ptr))
-                left_ptr = left_ptr->next;
-        }
-        if (right_ptr->next == NULL)
-            node_addback(&cmd_table->cmds, newnode(left_ptr));
-        right_ptr = right_ptr->next;
-    }
-    expander(cmd_table);
-    return (cmd_table);
+	cmd_table = start_parse();
+	left = cmd_ll;
+	right = cmd_ll;
+	while (right)
+	{
+		if (isredirection(right) || !ft_strncmp(right->token, "|", 2))
+			run_parser(cmd_table, &right, &left);
+		if (right->next == NULL)
+			node_addback(&cmd_table->cmds, newnode(left));
+		right = right->next;
+	}
+	return (cmd_table);
 }

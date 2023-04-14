@@ -1,67 +1,125 @@
-#include "myshell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/09 17:33:51 by pingpanu          #+#    #+#             */
+/*   Updated: 2023/04/14 16:13:41 by pingpanu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static char *rem_str(char *str)
+#include "minishell.h"
+
+static int	get_numdoll(char *str)
 {
-    char    *ret;
-    int     i = 0;
-    int     j = 0;
-    int     len = ft_strlen(str) - 2;
+	int	i;
 
-    ret = ft_calloc(sizeof(char), len);
-    while (str[++i] && j < len)
-    {
-        ret[j] = str[i];
-        j++;
-    }
-    return (ret);
+	i = 0;
+	while (*str)
+	{
+		if (*str == '$')
+			i++;
+			str++;
+	}
+	return (i);
 }
 
-static void quote_remove(char **cmd_arr)
+static char	*ll_to_string(t_list *buf, int status)
 {
-    int     i = 0;
-    
-    while (cmd_arr[i])
-    {
-        if (cmd_arr[i][0] == 39 || cmd_arr[i][0] == 34)
-            cmd_arr[i] = rem_str(cmd_arr[i]);
-        i++;
-    }
+	t_list	*ptr;
+	char	*buenv;
+	char	*ret;
+
+	ptr = buf;
+	ret = NULL;
+	while (ptr)
+	{
+		buenv = (char *) ptr->token;
+		if (!ft_strncmp(buenv, "$?", 3))
+			buenv = ft_itoa(status);
+		else if (buenv[0] == '$')
+			buenv = getenv(buenv + 1);
+		if (!ret)
+			ret = ft_strdup(buenv);
+		else
+			ret = ft_strjoin(ret, buenv);
+		ptr = ptr->next;
+	}
+	return (ret);
 }
-/*
-static void add_sign(char **cmd_arr)
+
+static char	*expand_dollar(char *cast, int status)
 {
-    int     i = 0;
-    char    *path;
-    char    *buf;
+	t_stpar	cpar;
+	t_list	*buf;
+	char	*substr;
 
-    while (cmd_arr[++i])
-    {
-        if (cmd_arr[i][0] == '$')
-        {
-            path = 
-        }
-    }
-}*/
+	buf = NULL;
+	init_stpar(&cpar);
+	cpar.len = ft_strlen(cast);
+	while (cpar.r <= cpar.len && cpar.l <= cpar.r)
+	{
+		if (cpar.r == 0 && cast[cpar.r] == '$')
+			cpar.r++;
+		if ((cpar.r != 0 && (cast[cpar.r] == '$' || cast[cpar.r] == ' '))
+			|| (cast[cpar.l] == '$' && cpar.r == cpar.len))
+		{
+			substr = ft_substr(cast, cpar.l, (cpar.r - cpar.l));
+			ft_lstadd_back(&buf, ft_lstnew(substr));
+			cpar.l = cpar.r;
+		}
+		cpar.r++;
+	}
+	cast = ll_to_string(buf, status);
+	ft_lstclear(&buf, &free_token);
+	return (cast);
+}
 
-void    expander(t_cmd_table *cmdt)
+static char	*quote_remove(void *content)
 {
-    t_cmd_node  *ptr;
+	char	*casted;
+	char	*ret;
+	int		i;
 
-    if (!cmdt->cmds)
-        return ;
-    ptr = cmdt->cmds;
-    while (ptr)
-    {
-        quote_remove(ptr->cmd_arr);
-        /*if (ptr->cmd_arr[0] == 39)
-            quote_remove(ptr->cmd_arr);
-        else if (ptr->cmd_arr[0] == 34)
-        {
-            quote_remove(ptr->cmd_arr);
-            add_sign(ptr->cmd_arr);
-        }
-        else
-            add_sign(ptr->cmd_arr);*/
-        ptr = ptr->next;
-    }
+	i = 0;
+	casted = (char *) content;
+	ret = ft_calloc(sizeof(char), ft_strlen(casted) - 1);
+	while (i < (int)ft_strlen(casted) - 2)
+	{
+		ret[i] = casted[i + 1];
+		i++;
+	}
+	free(casted);
+	return (ret);
+}
+
+void	expander(t_list **cmd_ll, t_data *data)
+{
+	t_list	*ptr;
+	char	*casted;
+
+	if (!(*cmd_ll))
+		return ;
+	ptr = *cmd_ll;
+	while (ptr)
+	{
+		casted = (char *) ptr->token;
+		if (casted[0] == 39)
+		{
+			ptr->token = (void *) quote_remove(casted);
+		}	
+		else if (casted[0] == 34)
+		{
+			casted = quote_remove(casted);
+			if (get_numdoll(casted) > 0)
+				ptr->token = (void *) expand_dollar(casted, data->exe_status);
+			else
+				ptr->token = (void *) casted;
+		}
+		else if (get_numdoll(casted) > 0)
+			ptr->token = (void *) expand_dollar(casted, data->exe_status);
+		ptr = ptr->next;
+	}
 }

@@ -1,22 +1,33 @@
-#include "myshell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exe_echo.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/09 16:04:16 by lsomrat           #+#    #+#             */
+/*   Updated: 2023/04/14 16:17:06 by pingpanu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int exe_echo(t_executor *exe, t_cmd_node *node)
+#include "minishell.h"
+
+int	exe_echo(t_executor *exe, t_cmd_node *node)
 {
-    int     fd;
-    int     i;
+	int	fd;
+	int	i;
 
-    fd = 1;
-    i = 0;
-    if (exe->out_fd > 0)
-        fd = exe->out_fd;
-    if (!ft_strncmp(node->cmd_arr[1], "-n", 3))
-        i = 1;
-    while (node->cmd_arr[++i])
-    {
-        ft_putstr_fd(node->cmd_arr[i], fd);
-        ft_putchar_fd(' ', fd);
-    }
-    if (ft_strncmp(node->cmd_arr[1], "-n", 3))
-        ft_putchar_fd('\n', fd);
-    return (0);
+	fd = 1;
+	i = 0;
+	if (exe->out_fd > 0)
+		fd = exe->out_fd;
+	if (!ft_strncmp(node->cmd_arr[1], "-n", 3))
+		i = 1;
+	while (node->cmd_arr[++i])
+	{
+		ft_putstr_fd(node->cmd_arr[i], fd);
+	}
+	if (ft_strncmp(node->cmd_arr[1], "-n", 3))
+		ft_putchar_fd('\n', fd);
+	return (0);
 }

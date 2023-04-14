@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exe_env.c                                          :+:      :+:    :+:   */
+/*   ft_isempty_str.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsomrat <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/09 09:06:28 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/09 09:06:42 by lsomrat          ###   ########.fr       */
+/*   Created: 2023/04/14 13:42:02 by pingpanu          #+#    #+#             */
+/*   Updated: 2023/04/14 16:07:52 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int ac, char **av, char **ev)
+int	ft_isempty_str(char *str)
 {
-	int	index;
+	int	i;
 
-	index = 0;
-	if (ac != 1 || av[1])
+	i = 0;
+	while (str[i])
 	{
-		printf("This program don't support arguments\n exiting\n");
-		return (1);
+		if (ft_isspace(str[i]))
+			return (0);
+		i++;
 	}
-	while (ev[index])
-		printf("%s\n", ev[index++]);
-	return (0);
+	return (1);
 }

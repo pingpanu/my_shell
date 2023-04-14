@@ -1,153 +1,83 @@
-#include "myshell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   myshell_main.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/16 21:08:07 by lsomrat           #+#    #+#             */
+/*   Updated: 2023/04/14 22:32:57 by pingpanu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-t_system    my_env; //a global variable   
+#include "minishell.h"
 
-void    sighandler(int signal)
+extern char** environ;
+
+char	*curr_dir(void)
 {
-    if (signal == SIGINT)
-    {
-        ft_putstr_fd("\n", STDOUT_FILENO);
-        rl_on_new_line();
-        rl_replace_line("",0);
-        rl_redisplay();
-    }
+	char	pwd[1000];
+	char	*ret;
+
+	if (!getcwd(pwd, 999))
+		return (NULL);
+	ret = ft_strrchr(pwd, '/', 1);
+	return (ret);
 }
 
-static void     free_arr(char **arr)
+void	exit_shell(t_data *data, int s)
 {
-    int     i;
-
-    if (!arr[0])
-        return ;
-    i = -1;
-    while (arr[++i])
-        free(arr[i]);
-    free(arr);
+	if (s != 0)
+		perror("Myshell");
+	if (data->cmd_table)
+		free_cmdtable(data);
+	if (data->cmd_ll)
+		ft_lstclear(&data->cmd_ll, &free_token);
+	free_arr(data->my_env.env_cop);
+	rl_clear_history();
+	printf("exit\n");
+	exit(s);
 }
 
-static void     node_clear(t_cmd_node **node)
+static int	check_input(char *str)
 {
-    t_cmd_node  *prev;
-
-    if (!node)
-        return ;
-    prev = *node;
-    while(*node)
-    {
-        *node = (*node)->next;
-        free_arr(prev->cmd_arr);
-        free(prev);
-        prev = *node;
-    }
-    *node = 0;
+	if (ft_strlen(str) == 0)
+		return (0);
+	else if (ft_isempty_str(str))
+		return (0);
+	else
+		return (1);
 }
 
-static void     free_cmdtable(t_cmd_table *cmdt)
+static void	run_main(t_data *data, t_stpar *stpar)
 {
-    node_clear(&cmdt->cmds);
-    if (cmdt->infile)
-        free(cmdt->infile);
-    if (cmdt->outfile)
-        free(cmdt->outfile);
-    free(cmdt);
+	add_history(data->cmd_str);
+	lexer(data, *stpar);
+	data->cmd_table = parser(data->cmd_ll);
+	executor(data);
+	free(data->cmd_str);
+	free_cmdtable(data);
+	ft_lstclear(&data->cmd_ll, &free_token);
 }
 
-static int  array_size(char **arr)
+int	main()
 {
-    int     i;
+	t_data	data;
+	t_stpar	stpar;
 
-    i = 0;
-    while (arr[i])
-        i++;
-    return (i);
-}
-
-static char **copy_env(char **ev)
-{
-    char    **env;
-    int     i;
-
-    i = array_size(ev);
-    env = ft_calloc(sizeof(char *), i + 1);
-    if (!env)
-        return (NULL);
-    i = -1;
-    while (ev[++i])
-        env[i] = ft_strdup(ev[i]);
-    return (env);
-}
-
-static void  init_terminal(t_system *env)
-{
-    env->myshell_term = malloc(sizeof(struct termios));
-    tcgetattr(STDIN_FILENO, env->myshell_term);
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, env->myshell_term);
-}
-
-char    *curr_dir(void)
-{
-    char    pwd[1000];
-    char    *ret;
-
-    if (!getcwd(pwd, 999))
-        return (NULL);
-    ret = ft_strrchr(pwd, '/', 1);
-    return (ret);
-}
-
-void     exit_shell(t_system *env, t_cmd_table *cmdt, t_list *cmdll, int exit_stat)
-{
-    if (exit_stat != 0)
-        perror("Myshell");
-    if (cmdt)
-        free_cmdtable(cmdt);
-    if (cmdll)
-        ft_lstclear(&cmdll, &free_token);
-    free(env->myshell_term);
-    free_arr(env->env_cop);
-    free_arr(env->env_path);
-    rl_clear_history();
-    printf("exit\n");
-    exit(exit_stat);
-}
-
-int main(int ac, char **av, char **ev)
-{
-    char        *cmd_str = NULL;
-    t_cmd_table *cmd_table;
-    t_list      *cmd_ll = NULL;
-
-    if (ac != 1 || av[1]) {
-        printf("Myshell supposed to run without args\n");
-        exit(1);
-    }
-    my_env.env_cop = copy_env(ev);
-    my_env.env_path = ft_split(getenv("PATH"), ':');
-    ft_strlcat(my_env.dis_str, "Myshell@ ", 10);
-    ft_strlcat(my_env.dis_str, curr_dir(), 499);
-    ft_strlcat(my_env.dis_str, ": ", 499);
-    my_env.act.sa_handler = sighandler;
-    my_env.act.sa_flags = 0;
-    sigemptyset(&my_env.act.sa_mask);
-    sigaction (SIGINT, &my_env.act, NULL);
-    my_env.quit.sa_handler = SIG_IGN;
-    my_env.quit.sa_flags = 0;
-    sigemptyset(&my_env.quit.sa_mask);
-    sigaction (SIGQUIT, &my_env.quit, NULL);
-    init_terminal(&my_env);
-    while (1)
-    {    
-        cmd_str = readline(my_env.dis_str);
-        if (cmd_str == NULL)
-            break ;
-        add_history(cmd_str);
-        lexer(&cmd_ll, cmd_str);
-        cmd_table = parser(cmd_ll);
-        if (!executor(&my_env, cmd_table, cmd_ll)) 
-            exit_shell(&my_env, cmd_table, cmd_ll, 1);
-        free_cmdtable(cmd_table);
-        ft_lstclear(&cmd_ll, &free_token);
-    }
-    exit_shell(&my_env, NULL, NULL, 0);
-    return (0);
+	init(&data, &stpar, environ);
+	while (1)
+	{
+		data.cmd_str = readline(data.my_env.dis_str);
+		if (data.cmd_str == NULL)
+			break ;
+		if (!check_input(data.cmd_str))
+		{
+			free(data.cmd_str);
+			continue ;
+		}
+		run_main(&data, &stpar);
+	}
+	exit_shell(&data, 0);
+	return (0);
 }

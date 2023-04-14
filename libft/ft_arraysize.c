@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_arraysize.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/28 22:23:39 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/04/10 13:31:40 by pingpanu         ###   ########.fr       */
+/*   Created: 2023/04/09 18:05:08 by pingpanu          #+#    #+#             */
+/*   Updated: 2023/04/09 18:05:15 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-size_t	ft_strlen(const char *str)
+int	array_size(char **arr)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (arr[i])
 		i++;
 	return (i);
 }
