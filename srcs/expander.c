@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:33:51 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/04/14 16:13:41 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:59:23 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,42 @@
 static int	get_numdoll(char *str)
 {
 	int	i;
-
-	i = 0;
-	while (*str)
+	int	ret;
+	
+	i = -1;
+	ret = 0;
+	while (str[++i])
 	{
-		if (*str == '$')
-			i++;
-			str++;
+		if (str[i] == '$')
+			ret++;
 	}
-	return (i);
+	return (ret);
 }
 
-static char	*ll_to_string(t_list *buf, int status)
+static char	*mini_getenv(char *str, char **ev)
+{
+	int		i;
+	int		len;
+	char	*buf;
+
+	i = -1;
+	buf = ft_strjoin(str, "=");
+	if (!buf)
+		return (NULL);
+	len = ft_strlen(buf);
+	while (ev[++i])
+	{
+		if (!ft_strncmp(ev[i], buf, len))
+		{
+			free(buf);
+			return (ev[i] + len);
+		}
+	}
+	free(buf);
+	return (NULL);
+}
+
+static char	*dollar_to_str(t_list *buf, t_data *data)
 {
 	t_list	*ptr;
 	char	*buenv;
@@ -38,9 +62,9 @@ static char	*ll_to_string(t_list *buf, int status)
 	{
 		buenv = (char *) ptr->token;
 		if (!ft_strncmp(buenv, "$?", 3))
-			buenv = ft_itoa(status);
+			buenv = ft_itoa(data->exe_status);
 		else if (buenv[0] == '$')
-			buenv = getenv(buenv + 1);
+			buenv = mini_getenv(buenv + 1, data->my_env.env_cop);
 		if (!ret)
 			ret = ft_strdup(buenv);
 		else
@@ -50,7 +74,7 @@ static char	*ll_to_string(t_list *buf, int status)
 	return (ret);
 }
 
-static char	*expand_dollar(char *cast, int status)
+static char	*expand_dollar(char *cast, t_data *data)
 {
 	t_stpar	cpar;
 	t_list	*buf;
@@ -72,7 +96,7 @@ static char	*expand_dollar(char *cast, int status)
 		}
 		cpar.r++;
 	}
-	cast = ll_to_string(buf, status);
+	cast = dollar_to_str(buf, data);
 	ft_lstclear(&buf, &free_token);
 	return (cast);
 }
@@ -114,12 +138,12 @@ void	expander(t_list **cmd_ll, t_data *data)
 		{
 			casted = quote_remove(casted);
 			if (get_numdoll(casted) > 0)
-				ptr->token = (void *) expand_dollar(casted, data->exe_status);
+				ptr->token = (void *) expand_dollar(casted, data);
 			else
 				ptr->token = (void *) casted;
 		}
 		else if (get_numdoll(casted) > 0)
-			ptr->token = (void *) expand_dollar(casted, data->exe_status);
+			ptr->token = (void *) expand_dollar(casted, data);
 		ptr = ptr->next;
 	}
 }
