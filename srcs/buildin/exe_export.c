@@ -6,7 +6,7 @@
 /*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 01:45:58 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/14 16:17:34 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/17 21:10:08 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,6 @@ static char	**add_env(char *newenv, char **arr)
 		ret[i] = ft_strdup(arr[i]);
 	ret[i] = ft_strdup(newenv);
 	return (ret);
-}
-
-static void	print_env(t_system *env, int i)
-{
-	char	*var_name;
-
-	while (env->env_cop[++i])
-	{
-		var_name = ft_strjoin("declare -x ", env->env_cop[i]);
-		printf("%s\n", var_name);
-		free(var_name);
-	}
 }
 
 static int	env_exist(char *export, t_system *env)

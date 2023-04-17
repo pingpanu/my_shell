@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:03:21 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/16 22:59:37 by user             ###   ########.fr       */
+/*   Updated: 2023/04/17 21:27:05 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ static int	init_terminal(t_system *env)
 	return (0);
 }
 
-void	init_stpar(t_stpar *stpar)
+void	init_stpar(t_stpar *stpar, char *str)
 {
-	stpar->len = 0;
+	stpar->len = ft_strlen(str);
 	stpar->l = 0;
 	stpar->r = 0;
 }
@@ -43,7 +43,7 @@ void	sig_handler(int signum)
 	}
 }
 
-void	init(t_data *data, t_stpar *stpar, char **ev)
+void	init(t_data *data, char **ev)
 {
 	data->cmd_str = NULL;
 	data->cmd_ll = NULL;
@@ -62,5 +62,4 @@ void	init(t_data *data, t_stpar *stpar, char **ev)
 	sigemptyset(&data->my_env.sigquit.sa_mask);
 	data->my_env.sigquit.sa_flags = SA_RESTART;
 	sigaction(SIGQUIT, &data->my_env.sigquit, NULL);
-	init_stpar(stpar);
 }

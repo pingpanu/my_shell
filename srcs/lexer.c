@@ -3,68 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 13:56:01 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/17 14:29:14 by user             ###   ########.fr       */
+/*   Updated: 2023/04/17 21:55:05 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "lexer.h"
 
-static void	add_cmd(t_stpar *stpar, t_data *data, int n)
+static void    space_sep(t_list **lst, char *str)
 {
-	char	*substr;
+    t_stpar sp;
 
-	substr = NULL;
-	if (n == 0)
-		substr = ft_substr(data->cmd_str, stpar->l, (stpar->r - stpar->l));
-	else
-		substr = ft_substr(data->cmd_str, stpar->l, (stpar->r - stpar->l + 1));
-	//if (!(ft_isquote(substr[0]) && ft_strlen(substr) != 2))
-	ft_lstadd_back(&data->cmd_ll, ft_lstnew(ft_strdup(substr)));
-	free(substr);
-	if (n == 1)
-		stpar->r++;
-	stpar->l = stpar->r;
+    init_stpar(&sp, str);
+    while (sp.r < sp.len && sp.l <= sp.r)
+    {
+        if (ft_isspace(str[sp.r]))
+            sp.r++;
+        else if (ft_isquote(str[sp.r]))
+        {
+            sp.l = sp.r++;
+            sp.r++;
+            while (!check(str[sp.r], str[sp.r + 1], sp))
+                sp.r++;
+            add_cmd(lst, &sp, str, 1);
+        }
+        else
+        {
+            sp.l = sp.r;
+            while (!ft_isspace(str[sp.r]))
+                sp.r++;
+            add_cmd(lst, &sp, str, 0);
+        }
+    }
 }
 
-static int	check(t_data *data, t_stpar stpar)
+static void     metachar_sep(t_list **lst)
 {
-	int	space;
+    t_list  *ptr;
+    t_stpar sp;
+    char    *casted;
 
-	space = ft_isspace(data->cmd_str[stpar.r]);
-	if ((space == 0 && !ft_isquote(data->cmd_str[stpar.r]))
-		&& stpar.r < stpar.len)
-		return (1);
-	return (0);
+    ptr = (*lst);
+    while (ptr)
+    {
+        casted = (char *)ptr->token;
+        if (metachar_num(casted) > 0)
+        {
+
+        }
+        ptr = ptr->next;
+    }
 }
 
-void	lexer(t_data *data, t_stpar stpar)
+void	lexer(t_data *data)
 {
-	stpar.len = ft_strlen(data->cmd_str);
-	while (stpar.r < stpar.len && stpar.l <= stpar.r)
-	{
-		if (ft_isspace(data->cmd_str[stpar.r]))
-		{
-			stpar.r++;
-			stpar.l++;
-		}
-		else if (ft_isquote(data->cmd_str[stpar.r]))
-		{
-			stpar.quote = data->cmd_str[stpar.r];
-			stpar.r++;
-			while (data->cmd_str[stpar.r] != stpar.quote && stpar.r < stpar.len)
-				stpar.r++;
-			add_cmd(&stpar, data, 1);
-		}
-		else
-		{
-			stpar.r++;
-			while (check(data, stpar) == 1)
-				stpar.r++;
-			add_cmd(&stpar, data, 0);
-		}
-	}
-	expander(&data->cmd_ll, data);
+	space_sep(&data->cmd_ll, data->cmd_str);
+	metachar_sep(&data->cmd_ll);
+	dol_expand(&data->cmd_ll, data->my_env);
+	quote_remove(&data->cmd_ll);
 }

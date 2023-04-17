@@ -3,52 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:33:51 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/04/16 22:59:23 by user             ###   ########.fr       */
+/*   Updated: 2023/04/17 21:51:20 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	get_numdoll(char *str)
-{
-	int	i;
-	int	ret;
-	
-	i = -1;
-	ret = 0;
-	while (str[++i])
-	{
-		if (str[i] == '$')
-			ret++;
-	}
-	return (ret);
-}
-
-static char	*mini_getenv(char *str, char **ev)
-{
-	int		i;
-	int		len;
-	char	*buf;
-
-	i = -1;
-	buf = ft_strjoin(str, "=");
-	if (!buf)
-		return (NULL);
-	len = ft_strlen(buf);
-	while (ev[++i])
-	{
-		if (!ft_strncmp(ev[i], buf, len))
-		{
-			free(buf);
-			return (ev[i] + len);
-		}
-	}
-	free(buf);
-	return (NULL);
-}
+#include "lexer.h"
 
 static char	*dollar_to_str(t_list *buf, t_data *data)
 {

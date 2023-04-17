@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lsomrat <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 16:12:33 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/09 16:12:34 by lsomrat          ###   ########.fr       */
+/*   Updated: 2023/04/17 21:07:31 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,15 @@ int	exe_unset(t_cmd_node *node, t_system *env)
 	int	i;
 
 	i = 1;
+	if (!node->cmd_arr[1])
+	{
+		printf("no argument supplied\n");
+		return (127);
+	}
 	while (node->cmd_arr[i])
 	{
 		if (!validate_node(node->cmd_arr[i]))
-			break ;
+			return (125);
 		remove_char_arr(node->cmd_arr[i], env->env_cop);
 		i++;
 	}

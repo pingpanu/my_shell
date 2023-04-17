@@ -3,34 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:55:25 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/04/16 22:59:24 by user             ###   ########.fr       */
+/*   Updated: 2023/04/17 21:50:22 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# include <stdio.h> //printf
-# include "libft.h" //already have unistd.h and stdlib.h
-# include <readline/readline.h> //readline, rl_*, and add_history
-# include <readline/history.h> //readline, rl_*, and add_history
-# include <fcntl.h> //open, unlink, dup, dup2,
-# include <sys/types.h> //fork
-# include <sys/wait.h> //wait, waitpid, wait3, wait4
-# include <sys/stat.h> //stat, lstat, and fstat
-# include <sys/ioctl.h> //ioctl
-# include <features.h> //to make signal properly work
-# include <signal.h> //signal, sigaction, sigemptyset, sigaddset, and kill
-# include <dirent.h> //opendir, readdir, and closedir
-# include <errno.h> //stderror, and perror
-//# include <termio.h>
+# include <stdio.h>
+# include "libft.h"
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
+# include <sys/ioctl.h>
+# include <signal.h>
+# include <dirent.h>
+# include <errno.h>
 # include <termios.h>
 # define BASH_IN 0
 # define BASH_OPT 1
 # define BASH_OUT 2
-//# define ECHOCTL 0x00000040
 
 typedef struct s_term
 {
@@ -82,18 +79,11 @@ typedef struct s_data
 	int				exe_status;
 }	t_data;
 
-typedef struct s_stpar
-{
-	int	len;
-	int	l;
-	int	r;
-	int	quote;
-}	t_stpar;
-
 void		sighandler(int signal);
 void		exit_shell(t_data *data, int s);
 char		*curr_dir(void);
-void		lexer(t_data *data, t_stpar stpar);
+void		lexer(t_data *data);
+void		space_sep(t_list **lst, char *str);
 void		free_token(void *content);
 void		free_arr(char **arr);
 void		free_cmdtable(t_data *data);
@@ -110,13 +100,13 @@ void		node_addback(t_cmd_node **node, t_cmd_node *newn);
 int			nodesize(t_cmd_node *cmds);
 int			ft_split_size(char	**split);
 void		expander(t_list **cmd_ll, t_data *data);
+char		*mini_getenv(char *str, char **ev);
 int			executor(t_data *data);
 int			exec(t_system *env, t_cmd_node *node);
 int			single_executor(t_data *data, t_executor *exe);
 int			pipe_executor(t_data *data, t_executor *exe);
 void		dup_back(t_executor *exe);
-void		init(t_data *data, t_stpar *stpar, char **ev);
-void		init_stpar(t_stpar *stpar);
+void		init(t_data *data, char **ev);
 void		init_exe(t_executor *exe, t_cmd_table *cmd_table);
 void		write_hdoc(char *infile, t_executor *exe);
 void		node_clear(t_cmd_node **node);
@@ -128,4 +118,5 @@ int			exe_env(t_system *env, t_cmd_node *node);
 int			exe_pwd(t_cmd_node *node);
 int			exe_unset(t_cmd_node *node, t_system *env);
 int			exe_export(t_cmd_node *node, t_system *env);
+void		print_env(t_system *env, int i);
 #endif
