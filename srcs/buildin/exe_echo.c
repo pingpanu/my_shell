@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_echo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 16:04:16 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/14 16:17:06 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/17 14:35:17 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	exe_echo(t_executor *exe, t_cmd_node *node)
 	while (node->cmd_arr[++i])
 	{
 		ft_putstr_fd(node->cmd_arr[i], fd);
+		write(fd, " ", 1);
 	}
 	if (ft_strncmp(node->cmd_arr[1], "-n", 3))
 		ft_putchar_fd('\n', fd);

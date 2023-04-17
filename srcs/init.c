@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 17:03:21 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/14 22:51:00 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:59:37 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,6 @@ void	init(t_data *data, t_stpar *stpar, char **ev)
 	ft_strlcat(data->my_env.dis_str, curr_dir(), 499);
 	ft_strlcat(data->my_env.dis_str, ": ", 499);
 	init_terminal(&data->my_env);
-	// data->my_env.act.sa_handler = sighandler;
-	// data->my_env.act.sa_flags = 0;
-	// sigemptyset(&data->my_env.act.sa_mask);
-	// sigaction (SIGINT, &data->my_env.act, NULL);
-	// data->my_env.quit.sa_handler = SIG_IGN;
-	// data->my_env.quit.sa_flags = 0;
-	// sigemptyset(&data->my_env.quit.sa_mask);
-	// sigaction (SIGQUIT, &data->my_env.quit, NULL);
 	data->my_env.sigint.sa_handler = sig_handler;
 	sigemptyset(&data->my_env.sigint.sa_mask);
 	data->my_env.sigint.sa_flags = SA_RESTART;

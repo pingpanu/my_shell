@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isempty_str.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 13:42:02 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/04/14 16:07:52 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/17 14:32:30 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_isempty_str(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (ft_isspace(str[i]))
+		if (!ft_isspace(str[i]))
 			return (0);
 		i++;
 	}

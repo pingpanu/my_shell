@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 18:43:40 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/04/14 22:51:39 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/17 14:33:58 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,33 @@ static int	exit_executor(t_data *data, t_executor *exe, int status)
 	dup2(exe->old_stdin, STDIN_FILENO);
 	dup2(exe->old_stdout, STDOUT_FILENO);
 	stop_exe(data->cmd_table, exe);
-	//signal_operator(&data->my_env, BASH_OUT);
 	return (status);
 }
 
+/*static void	print_table(t_cmd_table *table)
+{
+	t_cmd_node	*node;
+
+	node = table->cmds;
+	while (node)
+	{
+		int	i = -1;
+		while (node->cmd_arr[++i])
+			printf("%s\n", node->cmd_arr[i]);
+		node = node->next;
+	}
+	printf("infile = %s\n", table->infile);
+	printf("outfile = %s\n", table->outfile);
+}
+*/
 int	executor(t_data *data)
 {
 	t_executor	exe;
 
+	//print_table(data->cmd_table);
 	if (!data->cmd_table)
 		return (0);
 	init_exe(&exe, data->cmd_table);
-	//signal_operator(&data->my_env, BASH_IN);
 	if (is_buildins(data->cmd_table->cmds->cmd_arr[0]))
 		data->exe_status = buildins(data, &exe);
 	else if (exe.pipe_no > 1)

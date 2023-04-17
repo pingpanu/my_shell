@@ -4,12 +4,10 @@ CC = gcc
 FLAGS = -Wall -Wextra -Werror
 SDIR = srcs/
 LIB = libft
-LRB = /usr/local/Cellar/readline/8.2.1
 INC = include
 INC_ALL = 	-I$(INC) \
-			-I$(LIB) \
-			-I$(LRB)/include
-LINK = 	-L$(LRB)/lib -lreadline -L$(LIB) -lft\
+			-I$(LIB)
+LINK = -lreadline -L $(LIB) -lft \
 
 #color
 DEFCO = '\033[0m'

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   myshell_main.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 21:08:07 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/14 22:32:57 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/17 14:33:12 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,15 @@ static int	check_input(char *str)
 		return (1);
 }
 
-static void	run_main(t_data *data, t_stpar *stpar)
+static void	run_main(t_data *data, t_stpar stpar)
 {
 	add_history(data->cmd_str);
-	lexer(data, *stpar);
+	lexer(data, stpar);
 	data->cmd_table = parser(data->cmd_ll);
 	executor(data);
 	free(data->cmd_str);
 	free_cmdtable(data);
-	ft_lstclear(&data->cmd_ll, &free_token);
+	ft_lstclear(&data->cmd_ll, &free_token);\
 }
 
 int	main()
@@ -76,7 +76,7 @@ int	main()
 			free(data.cmd_str);
 			continue ;
 		}
-		run_main(&data, &stpar);
+		run_main(&data, stpar);
 	}
 	exit_shell(&data, 0);
 	return (0);

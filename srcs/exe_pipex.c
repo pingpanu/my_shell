@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_pipex.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 09:09:06 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/14 22:41:10 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:52:25 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ int	pipe_executor(t_data *data, t_executor *exe)
 		return (1);
 	}
 	cmd_ptr = data->cmd_table->cmds;
-	// tcsetattr(STDIN_FILENO, TCSANOW, data->my_env.myshell_term);
-	// signal_operator(&data->my_env, BASH_OPT);
 	while (cmd_ptr)
 	{
 		if (!child_processes(&data->my_env, cmd_ptr, exe))
@@ -80,6 +78,5 @@ int	pipe_executor(t_data *data, t_executor *exe)
 	while (waitpid(-1, NULL, 0) != -1)
 	{
 	}
-	// tcsetattr(STDIN_FILENO, TCSANOW, data->my_env.myshell_term);
 	return (0);
 }

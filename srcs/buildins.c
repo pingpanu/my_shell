@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   buildins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 09:02:39 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/14 22:51:20 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:53:49 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	buildins(t_data *data, t_executor *exe)
 
 	(void)exe;
 	node = data->cmd_table->cmds;
-	//signal_operator(&data->my_env, BASH_OUT);
 	if (!ft_strncmp(node->cmd_arr[0], "cd", 3))
 		return (exe_cd(&data->my_env, node->cmd_arr[1]));
 	if (!ft_strncmp(node->cmd_arr[0], "pwd", 4))

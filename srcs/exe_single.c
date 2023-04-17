@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_single.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 09:35:00 by lsomrat           #+#    #+#             */
-/*   Updated: 2023/04/14 22:40:51 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:53:05 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,11 @@ int	single_executor(t_data *data, t_executor *exe)
 	t_cmd_table	*cmdt;
 
 	cmdt = data->cmd_table;
-	// signal_operator(&data->my_env, BASH_OPT);
 	if ((exe->in_fd < 0 && cmdt->infile) || (exe->out_fd < 0 && cmdt->outfile))
 	{
 		perror("file not found\n");
 		return (1);
 	}
-	// tcsetattr(STDIN_FILENO, TCSANOW, data->my_env.myshell_term);
-	// signal_operator(&data->my_env, BASH_OPT);
 	dup_io_cmdt(exe, cmdt->infile, cmdt->outfile);
 	exe->pid = fork();
 	if (exe->pid < 0)
@@ -44,7 +41,8 @@ int	single_executor(t_data *data, t_executor *exe)
 		if (exec(&data->my_env, cmdt->cmds))
 			return (1);
 	}
-	waitpid(-1, NULL, 0);
-	// tcsetattr(STDIN_FILENO, TCSANOW, data->my_env.myshell_term);
+	while (waitpid(-1, NULL, 0) != -1)
+	{
+	}
 	return (0);
 }

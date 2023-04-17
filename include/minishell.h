@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 17:55:25 by pingpanu          #+#    #+#             */
-/*   Updated: 2023/04/14 22:52:57 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:59:24 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-// # define _XOPEN_SOURCE 700
 # include <stdio.h> //printf
 # include "libft.h" //already have unistd.h and stdlib.h
 # include <readline/readline.h> //readline, rl_*, and add_history
@@ -22,15 +21,16 @@
 # include <sys/wait.h> //wait, waitpid, wait3, wait4
 # include <sys/stat.h> //stat, lstat, and fstat
 # include <sys/ioctl.h> //ioctl
+# include <features.h> //to make signal properly work
 # include <signal.h> //signal, sigaction, sigemptyset, sigaddset, and kill
 # include <dirent.h> //opendir, readdir, and closedir
 # include <errno.h> //stderror, and perror
-# include <term.h>
+//# include <termio.h>
 # include <termios.h>
 # define BASH_IN 0
 # define BASH_OPT 1
 # define BASH_OUT 2
-# define ECHOCTL 0x00000040
+//# define ECHOCTL 0x00000040
 
 typedef struct s_term
 {
